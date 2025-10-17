@@ -2,6 +2,7 @@ package com.dl17.backend.Model;
 
 import lombok.*;
 
+@Builder
 @Data
 public class Account {
     private String id;
