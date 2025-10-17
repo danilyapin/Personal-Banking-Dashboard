@@ -1,8 +1,7 @@
 package com.dl17.backend.Controller;
 
 import com.dl17.backend.DTO.UserDTO;
-import com.dl17.backend.Model.User;
-import com.dl17.backend.Service.UserService;
+import com.dl17.backend.Service.LoginService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -11,21 +10,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/register")
-public class UserRegister {
+@RequestMapping("/api/login")
+public class UserLogin {
 
-    private final UserService userService;
+    private final LoginService loginService;
 
-    public UserRegister(UserService userService) {
-        this.userService = userService;
+    public UserLogin(LoginService loginService) {
+        this.loginService = loginService;
     }
 
     @PostMapping
-    public ResponseEntity<?> registerUser(@RequestBody UserDTO userDTO) {
+    public ResponseEntity<?> login(@RequestBody UserDTO userDTO) {
         try {
-            User user = userService.registerUser(userDTO);
-            return ResponseEntity.status(HttpStatus.CREATED).body(user);
-        } catch (Exception e) {
+            String token = loginService.login(userDTO);
+            return ResponseEntity.status(HttpStatus.OK).body("Token: " + token);
+        } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
         }
     }

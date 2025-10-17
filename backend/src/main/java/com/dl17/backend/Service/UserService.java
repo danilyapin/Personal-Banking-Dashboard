@@ -31,7 +31,6 @@ public class UserService {
             String encodedPassword = passwordEncoder.encode(userDTO.getPassword());
             User user = User.builder()
                     .username(userDTO.getUsername())
-                    .email(userDTO.getEmail())
                     .password(encodedPassword)
                     .build();
 
