@@ -1,6 +1,7 @@
 package com.dl17.backend.Service;
 
 import com.dl17.backend.DTO.AccountDTO;
+import com.dl17.backend.Exception.ThisAccountNotFoundException;
 import com.dl17.backend.Model.Account;
 import com.dl17.backend.Repository.AccountRepository;
 import org.springframework.stereotype.Service;
@@ -50,11 +51,11 @@ public class AccountService {
         return accountRepository.save(account);
     }
 
-    public void deleteAccountById(String id) throws AccountNotFoundException {
+    public void deleteAccountById(String id) {
         if(accountRepository.findById(id).isPresent()){
             accountRepository.deleteById(id);
         } else {
-            throw new AccountNotFoundException("Account not found with id: " + id);
+            throw new ThisAccountNotFoundException("Account not found with id: " + id);
         }
     }
 }
