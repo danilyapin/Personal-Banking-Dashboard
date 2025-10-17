@@ -1,6 +1,7 @@
 ##Main
 /.idea/
 *.iml
+.env
 
 ##Backend
 /backend/.idea/
