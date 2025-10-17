@@ -1,7 +1,6 @@
 package com.dl17.backend.Controller;
 
 import com.dl17.backend.DTO.UserDTO;
-import com.dl17.backend.Model.Transaction;
 import com.dl17.backend.Model.User;
 import com.dl17.backend.Service.UserService;
 import org.springframework.http.HttpStatus;
