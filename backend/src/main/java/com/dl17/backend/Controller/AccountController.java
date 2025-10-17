@@ -1,6 +1,7 @@
 package com.dl17.backend.Controller;
 
 import com.dl17.backend.DTO.AccountDTO;
+import com.dl17.backend.Exception.ThisAccountNotFoundException;
 import com.dl17.backend.Model.Account;
 import com.dl17.backend.Service.AccountService;
 import org.springframework.http.HttpStatus;
@@ -50,11 +51,11 @@ public class AccountController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteAccountById(@PathVariable String id) throws AccountNotFoundException {
+    public ResponseEntity<String> deleteAccountById(@PathVariable String id) {
         try {
             accountService.deleteAccountById(id);
             return new ResponseEntity<>("Account deleted with success.", HttpStatus.OK);
-        } catch (AccountNotFoundException e) {
+        } catch (ThisAccountNotFoundException e) {
             return new ResponseEntity<>("Account not found with id: " + id, HttpStatus.NOT_FOUND);
         }
     }

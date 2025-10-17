@@ -1,9 +1,11 @@
 package com.dl17.backend.Model;
 
+import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDate;
 
+@Builder
 @Data
 public class Transaction {
     private String id;
