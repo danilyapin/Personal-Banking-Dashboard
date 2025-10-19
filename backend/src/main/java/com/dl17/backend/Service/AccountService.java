@@ -1,12 +1,10 @@
 package com.dl17.backend.Service;
 
 import com.dl17.backend.DTO.AccountDTO;
-import com.dl17.backend.Exception.ThisAccountNotFoundException;
 import com.dl17.backend.Model.Account;
 import com.dl17.backend.Repository.AccountRepository;
 import org.springframework.stereotype.Service;
 
-import javax.security.auth.login.AccountNotFoundException;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,20 +17,18 @@ public class AccountService {
         this.accountRepository = accountRepository;
     }
 
-    public List<Account> getAccounts(){
-        return accountRepository.findAll();
+    public List<Account> getAccountsByUsername(String userId) {
+        return accountRepository.findByUserId(userId);
     }
 
-    public Optional<Account> getAccountById(String id){
-        if(accountRepository.findById(id).isPresent()){
-            return Optional.of(accountRepository.findById(id).get());
-        } else {
-            return Optional.empty();
-        }
+    public Optional<Account> getAccountById(String userId, String accountId) {
+        return accountRepository.findById(accountId)
+                .filter(account -> userId.equals(account.getUserId()));
     }
 
-    public Account createAccount(AccountDTO accountDTO){
+    public Account createAccountForUsername(String userId, AccountDTO accountDTO) {
         Account account = Account.builder()
+                .userId(userId)
                 .name(accountDTO.getName())
                 .type(accountDTO.getType())
                 .balance(accountDTO.getBalance())
@@ -40,22 +36,25 @@ public class AccountService {
         return accountRepository.save(account);
     }
 
-    public Account updateAccount(String id, AccountDTO accountDTO) throws AccountNotFoundException {
-
-        Account account = accountRepository.findById(id).orElseThrow(() -> new AccountNotFoundException("Account not found with " + id));
-
-        account.setName(accountDTO.getName());
-        account.setType(accountDTO.getType());
-        account.setBalance(accountDTO.getBalance());
-
-        return accountRepository.save(account);
+    public Optional<Account> updateAccountForUsername(String userId, String accountId, AccountDTO accountDTO) {
+        return accountRepository.findById(accountId)
+                .filter(account -> userId.equals(account.getUserId()))
+                .map(account ->  {
+                    account.setName(accountDTO.getName());
+                    account.setType(accountDTO.getType());
+                    account.setBalance(accountDTO.getBalance());
+                    return accountRepository.save(account);
+                });
     }
 
-    public void deleteAccountById(String id) {
-        if(accountRepository.findById(id).isPresent()){
-            accountRepository.deleteById(id);
+    public boolean deleteAccountByUsername(String userId, String accountId) {
+        Optional<Account> account = accountRepository.findById(accountId)
+                .filter(a -> userId.equals(a.getUserId()));
+        if (account.isPresent()) {
+            accountRepository.deleteById(accountId);
+            return true;
         } else {
-            throw new ThisAccountNotFoundException("Account not found with id: " + id);
+            return false;
         }
     }
 }
