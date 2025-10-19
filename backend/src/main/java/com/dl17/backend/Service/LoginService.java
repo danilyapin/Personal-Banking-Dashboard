@@ -29,7 +29,7 @@ public class LoginService {
         if (!bCryptPasswordEncoder.matches(userDTO.getPassword(), user.getPassword())) {
             throw new InvalidPasswordException("Invalid Password.");
         }
-        return jwtUtil.generateJWT(user.getUsername());
+        return jwtUtil.generateToken(user.getUsername());
     }
 
 }
