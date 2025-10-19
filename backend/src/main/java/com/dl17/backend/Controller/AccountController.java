@@ -55,7 +55,7 @@ public class AccountController {
         String username = getLoggedInUsername();
         boolean deleted = accountService.deleteAccountByUsername(username, id);
         if (deleted) {
-            return ResponseEntity.ok("Account deleted successfully.");
+            return ResponseEntity.ok("Account has been deleted successfully.");
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body("Account with id " + id + " not found.");

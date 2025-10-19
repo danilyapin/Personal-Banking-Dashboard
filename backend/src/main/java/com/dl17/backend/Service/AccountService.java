@@ -50,7 +50,6 @@ public class AccountService {
     public boolean deleteAccountByUsername(String userId, String accountId) {
         Optional<Account> account = accountRepository.findById(accountId)
                 .filter(a -> userId.equals(a.getUserId()));
-
         if (account.isPresent()) {
             accountRepository.deleteById(accountId);
             return true;
