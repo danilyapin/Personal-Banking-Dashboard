@@ -2,7 +2,7 @@ package com.dl17.backend.Controller;
 
 import com.dl17.backend.DTO.UserDTO;
 import com.dl17.backend.Model.User;
-import com.dl17.backend.Service.UserService;
+import com.dl17.backend.Service.RegisterService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,9 +14,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/register")
 public class UserRegister {
 
-    private final UserService userService;
+    private final RegisterService userService;
 
-    public UserRegister(UserService userService) {
+    public UserRegister(RegisterService userService) {
         this.userService = userService;
     }
 
