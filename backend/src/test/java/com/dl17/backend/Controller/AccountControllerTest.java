@@ -5,7 +5,6 @@ import com.dl17.backend.DTO.AccountDTO;
 import com.dl17.backend.Model.Account;
 import com.dl17.backend.Service.AccountService;
 import com.dl17.backend.Util.JwtUtil;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -41,8 +40,6 @@ class AccountControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
-    @Autowired
-    private ObjectMapper objectMapper;
 
     @WithMockUser(username = "user1234")
     @Test
@@ -61,7 +58,7 @@ class AccountControllerTest {
         mockAccount1.setType("FOOD");
         mockAccount1.setBalance(200.0);
 
-        when(accountService.getAccountsByUsername(mockAccount.getUserId())).thenReturn(List.of(mockAccount, mockAccount1));
+        when(accountService.getAccountsByUsername("user1234")).thenReturn(List.of(mockAccount, mockAccount1));
 
         mockMvc.perform(get("/api/accounts")
                 .contentType(MediaType.APPLICATION_JSON))
