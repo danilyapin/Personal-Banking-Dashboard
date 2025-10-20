@@ -1,7 +1,6 @@
 package com.dl17.backend.Service;
 
 import com.dl17.backend.DTO.TransactionDTO;
-import com.dl17.backend.Exception.TransactionNotFoundException;
 import com.dl17.backend.Model.Account;
 import com.dl17.backend.Model.Transaction;
 import com.dl17.backend.Repository.AccountRepository;
@@ -41,7 +40,7 @@ public class TransactionService {
                 .amount(dto.getAmount())
                 .type(dto.getType())
                 .category(dto.getCategory())
-                .date(dto.getDate() != null ? dto.getDate() : LocalDate.now())
+                .date(LocalDate.now())
                 .description(dto.getDescription())
                 .build();
         return transactionRepository.save(transaction);
