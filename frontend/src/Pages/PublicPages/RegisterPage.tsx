@@ -1,6 +1,6 @@
 import {useState} from "react";
 import axios from "axios";
-import { Box, TextField, Button, Typography, Stack, Alert } from "@mui/material";
+import {Box, TextField, Button, Typography, Stack, Alert, Link} from "@mui/material";
 import {useNavigate} from "react-router-dom";
 
 
@@ -26,10 +26,10 @@ export default function RegisterPage() {
             setUsername("");
             setPassword("");
 
-            setTimeout(() => navigate("/"), 3000);
+            setTimeout(() => navigate("/"), 2000);
         } catch (error) {
             console.log(error);
-            setError("Error occured");
+            setError("This username already exist");
         }
     }
 
@@ -39,19 +39,32 @@ export default function RegisterPage() {
             sx={{
                 maxWidth: 400,
                 mx: "auto",
-                mt: 8,
-                p: 4,
-                borderRadius: 2,
-                boxShadow: 3,
+                mt: 10,
+                p: 5,
+                borderRadius: 3,
+                boxShadow: 4,
                 backgroundColor: "background.paper",
             }}
         >
-            <Typography variant="h5" mb={3} textAlign="center">
-                Register Page
+            <Typography
+                variant="h5"
+                fontWeight={600}
+                mb={3}
+                textAlign="center"
+                color="text.primary"
+            >
+                Register
             </Typography>
 
-            {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
-            {success && <Alert severity="success" sx={{ mb: 2 }}>{success}</Alert>}
+            {error &&
+                <Alert severity="error" sx={{ mb: 2 }}>
+                    {error}
+                </Alert>}
+
+            {success &&
+                <Alert severity="success" sx={{ mb: 2 }}>
+                    {success}
+                </Alert>}
 
             <form onSubmit={handleRegister}>
                 <Stack spacing={2}>
@@ -64,7 +77,7 @@ export default function RegisterPage() {
                         fullWidth
                     />
                     <TextField
-                        label="Passwort"
+                        label="Password"
                         type="password"
                         variant="outlined"
                         value={password}
@@ -72,11 +85,30 @@ export default function RegisterPage() {
                         required
                         fullWidth
                     />
-                    <Button type="submit" variant="contained" color="primary" fullWidth>
+                    <Button
+                        type="submit"
+                        variant="contained"
+                        color="primary"
+                        fullWidth
+                        sx={{ mt: 1, py: 1.2, fontWeight: 600 }}
+                    >
                         Register
                     </Button>
                 </Stack>
             </form>
+            <Box textAlign="center" mt={3}>
+                <Typography variant="body2" color="text.secondary">
+                    Already a user?{" "}
+                    <Link
+                        href="/"
+                        underline="hover"
+                        color="primary"
+                        sx={{ fontWeight: 500 }}
+                    >
+                        Log in now
+                    </Link>
+                </Typography>
+            </Box>
         </Box>
     );
 }
