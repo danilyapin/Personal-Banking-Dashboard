@@ -1,6 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
-import { Box, TextField, Button, Typography, Stack, Alert } from "@mui/material";
+import {Box, TextField, Button, Typography, Stack, Alert, Link} from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
 export default function LoginPage() {
@@ -16,11 +16,10 @@ export default function LoginPage() {
         try {
             const response = await axios.post("/api/login", {
                 username,
-                password
+                password,
             });
 
-            const token = response.data.token;
-
+            const token = response.data;
             localStorage.setItem("token", token);
 
             navigate("/dashboard");
@@ -35,18 +34,28 @@ export default function LoginPage() {
             sx={{
                 maxWidth: 400,
                 mx: "auto",
-                mt: 8,
-                p: 4,
-                borderRadius: 2,
-                boxShadow: 3,
+                mt: 10,
+                p: 5,
+                borderRadius: 3,
+                boxShadow: 4,
                 backgroundColor: "background.paper",
             }}
         >
-            <Typography variant="h5" mb={3} textAlign="center">
-                Login Page
+            <Typography
+                variant="h5"
+                fontWeight={600}
+                mb={3}
+                textAlign="center"
+                color="text.primary"
+            >
+                Login
             </Typography>
 
-            {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
+            {error && (
+                <Alert severity="error" sx={{ mb: 2 }}>
+                    {error}
+                </Alert>
+            )}
 
             <form onSubmit={handleLogin}>
                 <Stack spacing={2}>
@@ -67,11 +76,31 @@ export default function LoginPage() {
                         required
                         fullWidth
                     />
-                    <Button type="submit" variant="contained" color="primary" fullWidth>
+
+                    <Button
+                        type="submit"
+                        variant="contained"
+                        color="primary"
+                        fullWidth
+                        sx={{ mt: 1, py: 1.2, fontWeight: 600 }}
+                    >
                         Login
                     </Button>
                 </Stack>
             </form>
+            <Box textAlign="center" mt={3}>
+                <Typography variant="body2" color="text.secondary">
+                    Not yet a user?{" "}
+                    <Link
+                        href="/register"
+                        underline="hover"
+                        color="primary"
+                        sx={{ fontWeight: 500 }}
+                    >
+                        Register now
+                    </Link>
+                </Typography>
+            </Box>
         </Box>
     );
 }
