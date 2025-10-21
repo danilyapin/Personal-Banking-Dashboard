@@ -23,7 +23,7 @@ public class UserLogin {
     public ResponseEntity<?> login(@RequestBody UserDTO userDTO) {
         try {
             String token = loginService.login(userDTO);
-            return ResponseEntity.status(HttpStatus.OK).body("Token: " + token);
+            return ResponseEntity.status(HttpStatus.OK).body(token);
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
         }
