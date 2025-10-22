@@ -1,20 +1,38 @@
 import {useState} from "react";
 import axios from "axios";
 import {Box, TextField, Button, Typography, Stack, Alert, Link} from "@mui/material";
-import {useNavigate} from "react-router-dom";
-
+import {useNavigate, Link as RouterLink} from "react-router-dom";
+import validator from "validator";
 
 export default function RegisterPage() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
+
     const [error, setError] = useState("");
     const [success, setSuccess] = useState("");
+
+    const [usernameError, setUsernameError] = useState("");
+    const [passwordError, setPasswordError] = useState("");
+    const [confirmPasswordError, setConfirmPasswordError] = useState("");
+
     const navigate = useNavigate();
 
     const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setError("");
         setSuccess("");
+
+        if(!validate()) return;
+
+        if (password !== confirmPassword) {
+            setError("Passwords do not match");
+
+            setTimeout(() => {
+                setError("");
+            }, 4000)
+            return;
+        }
 
         try {
             const response = await axios.post("/api/register", {
@@ -25,6 +43,7 @@ export default function RegisterPage() {
             setSuccess("Register successfully");
             setUsername("");
             setPassword("");
+            setConfirmPassword("");
 
             setTimeout(() => navigate("/"), 2000);
         } catch (error) {
@@ -33,6 +52,36 @@ export default function RegisterPage() {
         }
     }
 
+    const validate = () => {
+        let ok = true;
+
+        setUsernameError("");
+        setPasswordError("");
+        setConfirmPasswordError("");
+        setError("");
+
+        if (username.trim().length < 3) {
+            setUsernameError("Username must be at least 3 characters");
+            ok = false;
+        }
+
+        const strongPassword = {
+            minLength: 8,
+            minLowercase: 1,
+            minUppercase: 1,
+            minNumbers: 1,
+            minSymbols: 0
+        }
+
+        if(!validator.isStrongPassword(password, strongPassword)) {
+            setPasswordError(
+                "Password must be at least 8 characters and include uppercase, lowercase and a number"
+            );
+            ok = false
+        }
+
+        return ok;
+    }
 
     return (
         <Box
@@ -75,6 +124,8 @@ export default function RegisterPage() {
                         onChange={(e) => setUsername(e.target.value)}
                         required
                         fullWidth
+                        error={!!usernameError}
+                        helperText={usernameError}
                     />
                     <TextField
                         label="Password"
@@ -84,6 +135,19 @@ export default function RegisterPage() {
                         onChange={(e) => setPassword(e.target.value)}
                         required
                         fullWidth
+                        error={!!passwordError}
+                        helperText={passwordError}
+                    />
+                    <TextField
+                        label="Confirm Password"
+                        type="password"
+                        variant="outlined"
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                        required
+                        fullWidth
+                        error={!!confirmPasswordError}
+                        helperText={confirmPasswordError}
                     />
                     <Button
                         type="submit"
@@ -100,7 +164,8 @@ export default function RegisterPage() {
                 <Typography variant="body2" color="text.secondary">
                     Already a user?{" "}
                     <Link
-                        href="/"
+                        component={RouterLink}
+                        to="/"
                         underline="hover"
                         color="primary"
                         sx={{ fontWeight: 500 }}
