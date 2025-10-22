@@ -1,9 +1,9 @@
 import './App.css'
 import RegisterPage from "./Pages/PublicPages/RegisterPage.tsx";
 import LoginPage from "./Pages/PublicPages/LoginPage.tsx";
-import NavBar from "./Components/NavBar.tsx";
+import NavBar from "./Components/NavBar/NavBar.tsx";
 import { BrowserRouter , Routes, Route } from 'react-router-dom'
-import Footer from "./Components/Footer.tsx";
+import Footer from "./Components/Footer/Footer.tsx";
 import AboutUsPage from "./Pages/PublicPages/AboutUsPage.tsx";
 import DashboardPage from "./Pages/PrivatePages/DashboardPage.tsx"
 import AccountsPage from "./Pages/PrivatePages/AccountsPage.tsx";
