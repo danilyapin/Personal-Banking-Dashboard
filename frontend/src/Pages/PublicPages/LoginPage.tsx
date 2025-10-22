@@ -1,7 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import {Box, TextField, Button, Typography, Stack, Alert, Link} from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link as RouterLink } from "react-router-dom";
 
 export default function LoginPage() {
     const [username, setUsername] = useState("");
@@ -9,7 +9,7 @@ export default function LoginPage() {
     const [error, setError] = useState("");
     const navigate = useNavigate();
 
-    const handleLogin = async (e) => {
+    const handleLogin = async (e: { preventDefault: () => void; }) => {
         e.preventDefault();
         setError("");
 
@@ -26,6 +26,10 @@ export default function LoginPage() {
         } catch (err) {
             console.error(err);
             setError("Error logging in");
+
+            setTimeout(() => {
+                setError("")
+            }, 5000);
         }
     };
 
@@ -92,7 +96,8 @@ export default function LoginPage() {
                 <Typography variant="body2" color="text.secondary">
                     Not yet a user?{" "}
                     <Link
-                        href="/register"
+                        component={RouterLink}
+                        to="/register"
                         underline="hover"
                         color="primary"
                         sx={{ fontWeight: 500 }}

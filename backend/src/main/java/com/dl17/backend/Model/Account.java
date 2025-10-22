@@ -16,7 +16,7 @@ public class Account {
 
     private String userId;
     private String name;
-    private String type;
+    private AccountType type;
     private double balance;
 }
 

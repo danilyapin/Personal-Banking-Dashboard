@@ -1,5 +1,6 @@
 package com.dl17.backend.DTO;
 
+import com.dl17.backend.Model.AccountType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,6 +12,6 @@ import lombok.NoArgsConstructor;
 @Builder
 public class AccountDTO {
     private String name;
-    private String type;
+    private AccountType type;
     private double balance;
 }
