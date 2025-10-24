@@ -18,17 +18,20 @@ export default function AuthWatcher() {
     }
 
     useEffect(() => {
+        const token = localStorage.getItem("token");
+        if (!token) return;
+
         const interval = setInterval(() => {
-            const token = localStorage.getItem("token");
-            if (!token || isTokenExpired(token)) {
+            if (isTokenExpired(token)) {
                 localStorage.removeItem("token");
                 navigate("/", { replace: true });
-                showSnackbar("You have been automatically logged out.", "success")
+                showSnackbar("You have been automatically logged out.", "success");
+                clearInterval(interval);
             }
         }, 30000);
 
         return () => clearInterval(interval);
-    }, [navigate]);
+    }, [navigate, localStorage.getItem("token")]);
 
     return (
         <Snackbar
