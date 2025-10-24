@@ -1,4 +1,4 @@
-package com.dl17.backend.Model;
+package com.dl17.backend.Model.Account;
 
 public enum AccountType {
     CASH,

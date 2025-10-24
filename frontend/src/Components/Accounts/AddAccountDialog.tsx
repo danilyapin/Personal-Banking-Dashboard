@@ -9,7 +9,9 @@ import {
     FormControl,
     InputLabel,
     Select,
-    MenuItem,}
+    MenuItem,
+    Snackbar,
+    Alert}
     from "@mui/material";
 import axios from "axios";
 import {AccountType} from "../../types/AccountType.tsx";
@@ -23,8 +25,10 @@ type AddAccountDialogProps = {
 export default function AddAccountDialog({ open, onClose, onAdd }: AddAccountDialogProps) {
     const [newAccount, setNewAccount] = useState({
         name: "",
-        type: AccountType,
+        type: "",
         balance: "" });
+
+    const [snackbarOpen, setSnackbarOpen] = useState(false);
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         setNewAccount({ ...newAccount, [e.target.name]: e.target.value });
@@ -42,12 +46,19 @@ export default function AddAccountDialog({ open, onClose, onAdd }: AddAccountDia
             });
 
             onAdd(response.data);
-            setNewAccount({ name: "", type: newAccount.type, balance: "" });
+            setNewAccount({ name: "", type: "", balance: "" });
+            setSnackbarOpen(true);
             onClose();
         } catch (error) {
             console.log("Error adding account", error);
         }
     }
+
+    const isFormValid =
+        newAccount.name.trim() !== "" &&
+        newAccount.type.toString().trim() !== "" &&
+        newAccount.balance.trim() !== "";
+
 
     return (
         <Dialog
@@ -71,10 +82,20 @@ export default function AddAccountDialog({ open, onClose, onAdd }: AddAccountDia
                     <InputLabel>Type</InputLabel>
                     <Select
                         value={newAccount.type}
-                        label="Type"
                         onChange={(e) =>
                             setNewAccount({ ...newAccount, type: e.target.value as AccountType })}
+                        sx={{ width: '100%' }}
+                        label="Type"
+                        renderValue={(selected) => {
+                            if (!selected) return "Select type";
+                            return selected
+                                .toLowerCase()
+                                .split("_")
+                                .map(word => word[0].toUpperCase() + word.slice(1))
+                                .join(" ");
+                        }}
                     >
+                        <MenuItem value=""><em>Select Type</em></MenuItem>
                         <MenuItem value={AccountType.CASH}>Cash</MenuItem>
                         <MenuItem value={AccountType.CHECKING}>Checking</MenuItem>
                         <MenuItem value={AccountType.SAVINGS}>Savings</MenuItem>
@@ -104,10 +125,21 @@ export default function AddAccountDialog({ open, onClose, onAdd }: AddAccountDia
                     onClick={handleSubmit}
                     variant="contained"
                     color="primary"
+                    disabled={!isFormValid}
                 >
                     Save
                 </Button>
             </DialogActions>
+            <Snackbar
+                open={snackbarOpen}
+                autoHideDuration={3000}
+                onClose={() => setSnackbarOpen(false)}
+                anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+            >
+                <Alert onClose={() => setSnackbarOpen(false)} severity="success">
+                    Account added successfully!
+                </Alert>
+            </Snackbar>
         </Dialog>
     )
 }

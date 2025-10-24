@@ -1,8 +1,8 @@
 export enum AccountType {
-    CASH = "Cash",
-    CHECKING = "Checking",
-    SAVINGS = "Savings",
-    CREDIT_CARD = "Credit Card",
-    INVESTMENT = "Investment",
-    OTHER = "Other",
+    CASH = "CASH",
+    CHECKING = "CHECKING",
+    SAVINGS = "SAVINGS",
+    CREDIT_CARD = "CREDIT_CARD",
+    INVESTMENT = "INVESTMENT",
+    OTHER = "OTHER",
 }

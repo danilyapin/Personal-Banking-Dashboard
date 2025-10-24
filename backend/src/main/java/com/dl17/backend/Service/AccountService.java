@@ -1,7 +1,7 @@
 package com.dl17.backend.Service;
 
 import com.dl17.backend.DTO.AccountDTO;
-import com.dl17.backend.Model.Account;
+import com.dl17.backend.Model.Account.Account;
 import com.dl17.backend.Repository.AccountRepository;
 import org.springframework.stereotype.Service;
 
