@@ -10,12 +10,15 @@ import {
     FormControl,
     InputLabel,
     Select,
-    MenuItem,}
-from "@mui/material";
+    MenuItem,
+    Alert,
+    Snackbar,
+}
+    from "@mui/material";
 import axios from "axios";
 import {AccountType} from "../../types/AccountType.tsx";
 
-type Props = {
+type EditAccountProps = {
     open: boolean;
     onClose: () => void;
     onCloseConfirmDelete: () => void;
@@ -24,13 +27,15 @@ type Props = {
     onDelete: (accountId: string) => void;
 }
 
-export default function EditAccountDialog({ open, onClose, onCloseConfirmDelete, account, onUpdate, onDelete }: Props) {
+export default function EditAccountDialog({ open, onClose, onCloseConfirmDelete, account, onUpdate, onDelete }: EditAccountProps) {
     const [editedAccount, setEditedAccount] = useState(
         {
             name: "",
-            type: AccountType.CASH,
+            type: "",
             balance: ""
         });
+
+    const [snackbarOpen, setSnackbarOpen] = useState(false);
 
     const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
 
@@ -53,6 +58,7 @@ export default function EditAccountDialog({ open, onClose, onCloseConfirmDelete,
                 }
             })
             onDelete(account.accountId)
+            setSnackbarOpen(true);
             onClose()
         } catch (error) {
             console.error("Error deleting account", error);
@@ -91,6 +97,11 @@ export default function EditAccountDialog({ open, onClose, onCloseConfirmDelete,
         setConfirmDeleteOpen(false);
     }
 
+    const isFormValid =
+       editedAccount.name.trim() !== "" &&
+       editedAccount.type.toString().trim() !== "" &&
+       editedAccount.balance.trim() !== "";
+
     return (
         <>
         <Dialog open={open} onClose={onClose}>
@@ -121,7 +132,15 @@ export default function EditAccountDialog({ open, onClose, onCloseConfirmDelete,
                         <MenuItem value={AccountType.OTHER}>Other</MenuItem>
                     </Select>
                 </FormControl>
-                <TextField margin="dense" label="Balance" name="balance" type="number" fullWidth required value={editedAccount.balance} onChange={handleChange} />
+                <TextField
+                    margin="dense"
+                    label="Balance"
+                    name="balance"
+                    type="number"
+                    fullWidth
+                    value={editedAccount.balance}
+                    onChange={handleChange}
+                />
             </DialogContent>
             <DialogActions>
                 <Button
@@ -133,17 +152,34 @@ export default function EditAccountDialog({ open, onClose, onCloseConfirmDelete,
                     onClick={handleOpenConfirmDelete}
                     variant="contained"
                     color="error"
+                    sx={{
+                        '&:hover': {
+                            backgroundColor: 'white',
+                            color: 'var(--error-color)',
+                        },
+                    }}
                 >
                     Delete account
                 </Button>
-                <Button onClick={handleSubmit} variant="contained" color="primary">Save</Button>
+                <Button
+                    onClick={handleSubmit}
+                    variant="contained"
+                    color="primary"
+                    disabled={!isFormValid}
+                >
+                    Save
+                </Button>
             </DialogActions>
         </Dialog>
+            {confirmDeleteOpen && (
             <Dialog open={confirmDeleteOpen} onClose={onCloseConfirmDelete}>
                 <DialogTitle>Delete Account</DialogTitle>
                 <DialogContent>
                     <Typography>
                         Are you sure you want to delete this account?
+                    </Typography>
+                    <Typography>
+                        All associated transactions will be resolved revocably.
                     </Typography>
                 </DialogContent>
                 <DialogActions>
@@ -156,11 +192,32 @@ export default function EditAccountDialog({ open, onClose, onCloseConfirmDelete,
                         onClick={handleDelete}
                         variant="contained"
                         color="error"
+                        sx={{
+                            '&:hover': {
+                                backgroundColor: 'white',
+                                color: 'var(--error-color)',
+                            },
+                        }}
                     >
                         Delete account
                     </Button>
                 </DialogActions>
+                <Snackbar
+                    open={snackbarOpen}
+                    autoHideDuration={3000}
+                    onClose={() => setSnackbarOpen(false)}
+                    anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+                >
+                    <Alert
+                        onClose={() => setSnackbarOpen(false)}
+                        severity="success"
+                        sx={{ width: "100%" }}
+                    >
+                        Account deleted successfully!
+                    </Alert>
+                </Snackbar>
             </Dialog>
+            )}
     </>
     )
 }
