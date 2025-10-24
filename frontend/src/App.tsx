@@ -9,19 +9,24 @@ import DashboardPage from "./Pages/PrivatePages/DashboardPage.tsx"
 import AccountsPage from "./Pages/PrivatePages/AccountsPage.tsx";
 import ProtectedRoute from "./Utils/ProtectedRoute.tsx";
 import TransactionPage from "./Pages/PrivatePages/TransactionPage.tsx";
+import TransactionPageOfOneAccount from "./Pages/PrivatePages/TransactionPageOfOneAccount.tsx";
+import CategoriesPage from "./Pages/PrivatePages/CategoriesPage.tsx";
+import ImpressumPage from "./Pages/PublicPages/ImpressumPage.tsx";
+import AuthWatcher from "./Utils/AuthWatcher.tsx";
 
 function App() {
 
   return (
       <div className="app-container">
     <BrowserRouter>
+        <AuthWatcher />
         <NavBar />
         <div className="content">
         <Routes>
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/" element={<LoginPage />} />
             <Route path="/about-us" element={<AboutUsPage />} />
-
+            <Route path="/impressum" element={<ImpressumPage />} />
             <Route
                 path="/dashboard"
                 element={
@@ -41,11 +46,27 @@ function App() {
             <Route
                 path="/transactions"
                 element={
+                <ProtectedRoute>
+                    <TransactionPage />
+                </ProtectedRoute>}
+            >
+            </Route>
+            <Route
+                path="/accounts/:accountId/transactions"
+                element={
                     <ProtectedRoute>
-                        <TransactionPage />
-                    </ProtectedRoute>
-                }
-            />
+                        <TransactionPageOfOneAccount />
+                    </ProtectedRoute>}
+            >
+            </Route>
+            <Route
+                path="/categories"
+                element={
+                    <ProtectedRoute>
+                        <CategoriesPage />
+                    </ProtectedRoute>}
+            >
+            </Route>
         </Routes>
         </div>
         <Footer />
