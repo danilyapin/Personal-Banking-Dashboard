@@ -1,7 +1,7 @@
 package com.dl17.backend.Controller;
 
 import com.dl17.backend.DTO.AccountDTO;
-import com.dl17.backend.Model.Account;
+import com.dl17.backend.Model.Account.Account;
 import com.dl17.backend.Service.AccountService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

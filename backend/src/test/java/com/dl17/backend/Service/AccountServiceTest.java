@@ -1,7 +1,8 @@
 package com.dl17.backend.Service;
 
 import com.dl17.backend.DTO.AccountDTO;
-import com.dl17.backend.Model.Account;
+import com.dl17.backend.Model.Account.Account;
+import com.dl17.backend.Model.Account.AccountType;
 import com.dl17.backend.Repository.AccountRepository;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -22,7 +23,7 @@ class AccountServiceTest {
 
     @Test
     void createAccountForUsername() {
-        AccountDTO accountDTO = new AccountDTO("Testkonto", "Savings", 500.0);
+        AccountDTO accountDTO = new AccountDTO("Testkonto", AccountType.CHECKING, 500.0);
         Account savedAccount = Account.builder()
                 .accountId("abc123")
                 .userId("user1")
@@ -48,7 +49,7 @@ class AccountServiceTest {
                 .accountId("abc123")
                 .userId("user1")
                 .name("Main account")
-                .type("Debit")
+                .type(AccountType.OTHER)
                 .balance(500.0)
                 .build();
 
@@ -66,7 +67,7 @@ class AccountServiceTest {
                 .accountId("abc123")
                 .userId("user1")
                 .name("Main account")
-                .type("Debit")
+                .type(AccountType.CHECKING)
                 .balance(500.0)
                 .build();
 
@@ -74,7 +75,7 @@ class AccountServiceTest {
                 .accountId("abc1234")
                 .userId("user1")
                 .name("Main account")
-                .type("Debit")
+                .type(AccountType.INVESTMENT)
                 .balance(500.0)
                 .build();
 
@@ -94,11 +95,11 @@ class AccountServiceTest {
                 .accountId("abc123")
                 .userId("user1")
                 .name("Main account")
-                .type("Debit")
+                .type(AccountType.CHECKING)
                 .balance(500.0)
                 .build();
 
-        AccountDTO dto = new AccountDTO("NewName", "Savings", 500.0);
+        AccountDTO dto = new AccountDTO("NewName", AccountType.CASH, 500.0);
 
         when(accountRepository.findById("abc123")).thenReturn(Optional.of(account1));
         when(accountRepository.save(any(Account.class))).thenReturn(account1);
@@ -117,7 +118,7 @@ class AccountServiceTest {
                 .accountId("abc123")
                 .userId("user1")
                 .name("Main account")
-                .type("Debit")
+                .type(AccountType.CASH)
                 .balance(500.0)
                 .build();
 

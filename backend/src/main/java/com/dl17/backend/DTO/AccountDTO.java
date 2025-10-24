@@ -1,6 +1,6 @@
 package com.dl17.backend.DTO;
 
-import com.dl17.backend.Model.AccountType;
+import com.dl17.backend.Model.Account.AccountType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
