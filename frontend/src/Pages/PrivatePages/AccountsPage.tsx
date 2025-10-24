@@ -1,80 +1,86 @@
-import { useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import AddAccountDialog from "../../Components/Accounts/AddAccountDialog.tsx";
 import EditAccountDialog from "../../Components/Accounts/EditAccountsDialog.tsx";
+import AccountList from "../../Components/Accounts/AccountList.tsx";
 import {
     Box,
     Typography,
-    Card,
-    CardContent,
-    Stack,
     Button,
-    CircularProgress, Container
+    CircularProgress,
+    Container,
+    Snackbar,
+    Alert,
 } from "@mui/material";
-import {AccountType} from "../../types/AccountType.tsx";
+import { AccountType } from "../../types/AccountType.tsx";
 
 type Account = {
     accountId: string;
     name: string;
     type: AccountType;
     balance: number;
-}
+};
 
 export default function AccountsPage() {
     const [accounts, setAccounts] = useState<Account[]>([]);
     const [loading, setLoading] = useState(true);
-
     const [open, setOpen] = useState<boolean>(false);
-
     const [editingAccount, setEditingAccount] = useState<Account | null>(null);
     const [editOpen, setEditOpen] = useState(false);
-
-    const handleOpen = () => setOpen(true);
-    const handleClose = () => setOpen(false);
+    const [snackbarOpen, setSnackbarOpen] = useState(false);
+    const [snackbarMessage, setSnackbarMessage] = useState("")
+    const [snackbarSeverity, setSnackbarSeverity] = useState<"success" | "error">("success")
 
     useEffect(() => {
         const token = localStorage.getItem("token");
-
         setLoading(true);
-        axios.get("/api/accounts", {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            }
-        })
+
+        axios
+            .get("/api/accounts", {
+                headers: { Authorization: `Bearer ${token}` },
+            })
             .then((response) => {
                 setAccounts(response.data);
                 setLoading(false);
             })
             .catch((error) => {
-                console.log("Error fetching accounts", error);
+                console.error("Error fetching accounts", error);
                 setLoading(false);
-            })
+                showSnackbar("Failed to load accounts", "error")
+
+            });
     }, []);
 
+    const handleUpdateAccount = (updated: Account) => {
+        setAccounts((prev) =>
+            prev.map((acc) => (acc.accountId === updated.accountId ? updated : acc))
+        );
+    };
 
-    const handleAddAccount = (account: Account) => {
-        setAccounts([...accounts, account]);
-    }
-
-    const handleUpdateAccount = (updateAccount: Account) => {
-        setAccounts(accounts.map(account => account.accountId === updateAccount.accountId ? updateAccount : account));
-    }
+    const handleDeleteAccount = (accountId: string) => {
+        setAccounts((prev) => prev.filter((acc) => acc.accountId !== accountId));
+        showSnackbar("Account deleted successfully", "success");
+    };
 
     const handleEditOpen = (account: Account) => {
         setEditingAccount(account);
         setEditOpen(true);
-    }
-
-    const handleCloseConfirmDelete = () => {
-    }
-
-    const handleDeleteAccount = (accountId: string) => {
-        setAccounts(accounts.filter(account => account.accountId !== accountId));
-    }
+    };
 
     const handleEditClose = () => {
         setEditingAccount(null);
         setEditOpen(false);
+    };
+
+    const handleAddSuccess = (account: Account) => {
+        setAccounts((prev) => [...prev, account]);
+        showSnackbar("Account added successfully", "success");
+    };
+
+    const showSnackbar = (message: string, severity: typeof snackbarSeverity = "success") => {
+        setSnackbarMessage(message)
+        setSnackbarSeverity(severity);
+        setSnackbarOpen(true);
     }
 
     if (loading) {
@@ -86,68 +92,50 @@ export default function AccountsPage() {
                 alignItems="center"
                 height="50vh"
             >
-                <CircularProgress role="status" sx={{ mb: 2 }} />
-                <Typography variant="body1" color="textSecondary">Loading accounts, please wait...</Typography>
+                <CircularProgress sx={{ mb: 2 }} />
+                <Typography color="text.secondary">
+                    Loading accounts, please wait...
+                </Typography>
             </Box>
         );
     }
 
     return (
-        <Container sx={{ mt:4 }}>
+        <Container sx={{ mt: 4 }}>
             <Typography variant="h4" mb={3} fontWeight={600}>
                 My Accounts
             </Typography>
-            {accounts.length === 0 ? (
-                <Stack alignItems="center">
-                    <Typography variant="h6" fontWeight={600}>
-                        You don’t have any accounts yet.
-                    </Typography>
-                </Stack>
-            ) : (
-                <Stack spacing={3}>
-                {accounts.map(account => (
-                    <Card key={account.name} sx={{ p: 2, borderRadius: 3, boxShadow: 3 }}>
-                        <CardContent sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                            <Box>
-                                <Typography variant="h6" fontWeight={500}>{account.name}</Typography>
-                                <Typography color="text.secondary">{account.type}</Typography>
-                            </Box>
-                            <Box textAlign="right">
-                                <Typography variant="h6" fontWeight={600}>${account.balance.toFixed(2)}</Typography>
-                                <Stack direction="column" spacing={1} alignItems="flex-end" mt={1}>
-                                    <Button size="small" variant="outlined">
-                                        View Transactions
-                                    </Button>
-                                    <Button
-                                        size="small"
-                                        variant="outlined"
-                                        onClick={() => handleEditOpen(account)}
-                                    >
-                                        Edit account
-                                    </Button>
-                                </Stack>
-                            </Box>
-                        </CardContent>
-                    </Card>
-                ))}
-            </Stack>
-            )}
+            <AccountList accounts={accounts} onEdit={handleEditOpen} />
             <Box textAlign="center" mt={4}>
-                <Button variant="contained" color="primary" onClick={handleOpen}>
+                <Button variant="contained" color="primary" onClick={() => setOpen(true)}>
                     Add New Account
                 </Button>
             </Box>
-            <AddAccountDialog open={open} onClose={handleClose} onAdd={handleAddAccount} />
-                {editingAccount && (
-                    <EditAccountDialog
-                        open={editOpen}
-                        onClose={handleEditClose}
-                        onCloseConfirmDelete={handleCloseConfirmDelete}
-                        account={editingAccount}
-                        onUpdate={handleUpdateAccount}
-                        onDelete={handleDeleteAccount}
-                    />
-                )}
+            <AddAccountDialog open={open} onClose={() => setOpen(false)} onAdd={handleAddSuccess} />
+            <Snackbar
+                open={snackbarOpen}
+                autoHideDuration={3000}
+                onClose={() => setSnackbarOpen(false)}
+                anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+            >
+                <Alert
+                    onClose={() => setSnackbarOpen(false)}
+                    severity={snackbarSeverity}
+                    sx={{ width: '100%', border: '1px solid', borderColor: 'grey.500'  }}
+                >
+                    {snackbarMessage}
+                </Alert>
+            </Snackbar>
+            {editingAccount && (
+                <EditAccountDialog
+                    open={editOpen}
+                    onClose={handleEditClose}
+                    account={editingAccount}
+                    onUpdate={handleUpdateAccount}
+                    onDelete={handleDeleteAccount}
+                    onCloseConfirmDelete={() => {}}
+                />
+            )}
         </Container>
-    )
+    );
 }
