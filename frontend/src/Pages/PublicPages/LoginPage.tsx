@@ -1,12 +1,14 @@
 import { useState } from "react";
 import axios from "axios";
-import {Box, TextField, Button, Typography, Stack, Alert, Link} from "@mui/material";
+import {Box, TextField, Button, Typography, Stack, Alert, Link, Snackbar} from "@mui/material";
 import { useNavigate, Link as RouterLink } from "react-router-dom";
 
 export default function LoginPage() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
+    const [snackBarOpen, setSnackBarOpen] = useState(false);
+
     const navigate = useNavigate();
 
     const handleLogin = async (e: { preventDefault: () => void; }) => {
@@ -22,7 +24,12 @@ export default function LoginPage() {
             const token = response.data;
             localStorage.setItem("token", token);
 
-            navigate("/dashboard");
+            setSnackBarOpen(true);
+
+            setTimeout(() => {
+                navigate("/dashboard");
+            }, 1500)
+
         } catch (err) {
             console.error(err);
             setError("Error logging in");
@@ -106,6 +113,17 @@ export default function LoginPage() {
                     </Link>
                 </Typography>
             </Box>
+            <Snackbar
+                open={snackBarOpen}
+                autoHideDuration={4000}
+                onClose={() => setSnackBarOpen(false)}
+                anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+            >
+                <Alert onClose={() => setSnackBarOpen(false)} severity="success" sx={{ width: '100%', border: '1px solid', borderColor: 'grey.500'  }}>
+                    Login successful!
+                </Alert>
+            </Snackbar>
+
         </Box>
     );
 }
