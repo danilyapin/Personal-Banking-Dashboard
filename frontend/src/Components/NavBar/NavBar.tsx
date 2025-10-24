@@ -9,7 +9,7 @@ import {
     useTheme,
     useMediaQuery,
     IconButton,
-    Drawer
+    Drawer, Alert, Snackbar
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import {useState} from "react";
@@ -22,11 +22,16 @@ export default function NavBar() {
     const theme = useTheme();
     const isSmall = useMediaQuery(theme.breakpoints.down("sm"));
     const [drawerOpen, setDrawerOpen] = useState(false);
+    const [snackBarOpen, setSnackBarOpen] = useState(false);
 
     const handleLogout = () => {
         localStorage.removeItem("token");
+        setSnackBarOpen(true);
         setDrawerOpen(false);
-        navigate("/");
+
+        setTimeout(() => {
+            navigate("/");
+        }, 1500)
     }
 
     return (
@@ -95,6 +100,15 @@ export default function NavBar() {
                             </Link>
                             <Link
                                 component={RouterLink}
+                                to="/categories"
+                                underline="hover"
+                                color="text.primary"
+                                sx={{ "&:hover": { color: "primary.main" } }}
+                            >
+                                Categories
+                            </Link>
+                            <Link
+                                component={RouterLink}
                                 to="/transactions"
                                 underline="hover"
                                 color="text.primary"
@@ -144,6 +158,16 @@ export default function NavBar() {
                 </Stack>
                 )}
             </Toolbar>
+            <Snackbar
+                open={snackBarOpen}
+                autoHideDuration={4000}
+                onClose={() => setSnackBarOpen(false)}
+                anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+            >
+                <Alert onClose={() => setSnackBarOpen(false)} severity="success" sx={{ width: '100%', border: '1px solid', borderColor: 'grey.500'  }}>
+                    Logout successful!
+                </Alert>
+            </Snackbar>
         </AppBar>
     );
 }
