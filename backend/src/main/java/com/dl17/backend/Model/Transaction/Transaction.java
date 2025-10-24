@@ -1,4 +1,4 @@
-package com.dl17.backend.Model;
+package com.dl17.backend.Model.Transaction;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Document(collection = "transactions")
 @Data
@@ -19,10 +19,11 @@ public class Transaction {
     @Id
     private String transactionId;
 
+    private String userId;
     private String accountId;
+    private String categoryId;
     private double amount;
-    private String type;
-    private String category;
-    private LocalDate date;
+    private TransactionType type;
+    private LocalDateTime date;
     private String description;
 }
