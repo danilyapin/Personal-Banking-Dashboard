@@ -1,13 +1,13 @@
 package com.dl17.backend.Service;
 
 import com.dl17.backend.DTO.TransactionDTO;
-import com.dl17.backend.Model.Account;
-import com.dl17.backend.Model.Transaction;
+import com.dl17.backend.Model.Account.Account;
+import com.dl17.backend.Model.Transaction.Transaction;
 import com.dl17.backend.Repository.AccountRepository;
 import com.dl17.backend.Repository.TransactionRepository;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,9 +22,17 @@ public class TransactionService {
         this.accountRepository = accountRepository;
     }
 
+    public List<Transaction> getAllTransactionsForUser(String username) {
+        List<Account> accounts = accountRepository.findByUserId(username);
+        List<String> accountIds = accounts.stream()
+                .map(Account::getAccountId)
+                .toList();
+        return transactionRepository.findByAccountIdInOrderByDateDesc(accountIds);
+    }
+
     public List<Transaction> getTransactionsByAccount(String username, String accountId) {
         verifyAccountOwnership(username, accountId);
-        return transactionRepository.findByAccountId(accountId);
+        return transactionRepository.findByAccountIdOrderByDateDesc(accountId);
     }
 
     public Optional<Transaction> getTransactionById(String username, String accountId, String transactionId) {
@@ -36,11 +44,12 @@ public class TransactionService {
     public Transaction createTransaction(String username, String accountId, TransactionDTO dto) {
         verifyAccountOwnership(username, accountId);
         Transaction transaction = Transaction.builder()
+                .userId(username)
                 .accountId(accountId)
+                .categoryId(dto.getCategoryId())
                 .amount(dto.getAmount())
                 .type(dto.getType())
-                .category(dto.getCategory())
-                .date(LocalDate.now())
+                .date(LocalDateTime.now())
                 .description(dto.getDescription())
                 .build();
         return transactionRepository.save(transaction);

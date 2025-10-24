@@ -1,5 +1,6 @@
 package com.dl17.backend.DTO;
 
+import com.dl17.backend.Model.Transaction.TransactionType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class TransactionDTO {
     private double amount;
-    private String type;
-    private String category;
+    private TransactionType type;
     private String description;
+    private String categoryId;
 }

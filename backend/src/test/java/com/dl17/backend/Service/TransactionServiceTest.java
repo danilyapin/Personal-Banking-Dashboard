@@ -1,14 +1,16 @@
 package com.dl17.backend.Service;
 
 import com.dl17.backend.DTO.TransactionDTO;
-import com.dl17.backend.Model.Account;
-import com.dl17.backend.Model.Transaction;
+import com.dl17.backend.Model.Account.Account;
+import com.dl17.backend.Model.Transaction.Transaction;
+import com.dl17.backend.Model.Transaction.TransactionType;
 import com.dl17.backend.Repository.AccountRepository;
 import com.dl17.backend.Repository.TransactionRepository;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,9 +41,9 @@ class TransactionServiceTest {
                 .transactionId("t1")
                 .accountId(accountId)
                 .amount(100)
-                .type("Expense")
-                .category("Food")
-                .date(LocalDate.now())
+                .type(TransactionType.EXPENSE)
+                .categoryId("Food")
+                .date(LocalDateTime.now())
                 .description("Lunch")
                 .build();
 
@@ -49,9 +51,9 @@ class TransactionServiceTest {
                 .transactionId("t2")
                 .accountId(accountId)
                 .amount(400)
-                .type("Expense")
-                .category("Hobby")
-                .date(LocalDate.now())
+                .type(TransactionType.INCOME)
+                .categoryId("Hobby")
+                .date(LocalDateTime.now())
                 .description("Sport")
                 .build();
 
@@ -61,10 +63,10 @@ class TransactionServiceTest {
         List<Transaction> result = transactionService.getTransactionsByAccount(username, accountId);
 
         assertThat(result.get(0).getTransactionId()).isEqualTo("t1");
-        assertThat(result.get(0).getCategory()).isEqualTo(transaction1.getCategory());
+        assertThat(result.get(0).getCategoryId()).isEqualTo(transaction1.getCategoryId());
         assertThat(result.get(0).getAccountId()).isEqualTo(transaction1.getAccountId());
         assertThat(result.get(1).getTransactionId()).isEqualTo("t2");
-        assertThat(result.get(1).getCategory()).isEqualTo(transaction2.getCategory());
+        assertThat(result.get(1).getCategoryId()).isEqualTo(transaction2.getCategoryId());
         assertThat(result.get(1).getAccountId()).isEqualTo(transaction2.getAccountId());
         verify(transactionRepository, times(1)).findByAccountId(accountId);
     }
@@ -85,9 +87,9 @@ class TransactionServiceTest {
                 .transactionId(transactionId)
                 .accountId(accountId)
                 .amount(200)
-                .type("Income")
-                .category("Salary")
-                .date(LocalDate.now())
+                .type(TransactionType.EXPENSE)
+                .categoryId("")
+                .date(LocalDateTime.now())
                 .description("Paycheck")
                 .build();
 
@@ -97,7 +99,7 @@ class TransactionServiceTest {
         Optional<Transaction> result = transactionService.getTransactionById(username, accountId, transactionId);
 
         assertTrue(result.isPresent());
-        assertThat(result.get().getCategory()).isEqualTo(transaction.getCategory());
+        assertThat(result.get().getCategoryId()).isEqualTo(transaction.getCategoryId());
         verify(transactionRepository, times(1)).findById(transactionId);
     }
 
@@ -112,15 +114,15 @@ class TransactionServiceTest {
                 .balance(500)
                 .build();
 
-        TransactionDTO dto = new TransactionDTO(250, "Girocard", "Groceries", "Supermarket");
+        TransactionDTO dto = new TransactionDTO(250, TransactionType.EXPENSE, "Groceries", "Supermarket");
 
         Transaction savedTransaction = Transaction.builder()
                 .transactionId("t1")
                 .accountId(accountId)
                 .amount(dto.getAmount())
                 .type(dto.getType())
-                .category(dto.getCategory())
-                .date(LocalDate.now())
+                .categoryId(dto.getCategoryId())
+                .date(LocalDateTime.now())
                 .description(dto.getDescription())
                 .build();
 
@@ -130,7 +132,7 @@ class TransactionServiceTest {
         Transaction result = transactionService.createTransaction(username, accountId, dto);
 
         assertThat(result.getTransactionId()).isEqualTo("t1");
-        assertThat(result.getCategory()).isEqualTo("Groceries");
+        assertThat(result.getCategoryId()).isEqualTo("Groceries");
         verify(transactionRepository, times(1)).save(any(Transaction.class));
     }
 
