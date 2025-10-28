@@ -33,7 +33,10 @@ public class SecurityConfig {
                                 "/api/register",
                                 "/api/login"
                         ).permitAll()
-                        .requestMatchers("/api/accounts/**", "/api/transactions/**").authenticated()
+                        .requestMatchers(
+                                "/api/accounts/**",
+                                "/api/transactions/**",
+                                "/api/categories/**").authenticated()
                         .anyRequest().authenticated()
                 )
                 .httpBasic().disable();
