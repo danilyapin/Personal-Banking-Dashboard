@@ -91,21 +91,21 @@ export default function NavBar() {
                             </Link>
                             <Link
                                 component={RouterLink}
-                                to="/accounts"
-                                underline="hover"
-                                color="text.primary"
-                                sx={{ "&:hover": { color: "primary.main" } }}
-                            >
-                                Accounts
-                            </Link>
-                            <Link
-                                component={RouterLink}
                                 to="/categories"
                                 underline="hover"
                                 color="text.primary"
                                 sx={{ "&:hover": { color: "primary.main" } }}
                             >
                                 Categories
+                            </Link>
+                            <Link
+                                component={RouterLink}
+                                to="/accounts"
+                                underline="hover"
+                                color="text.primary"
+                                sx={{ "&:hover": { color: "primary.main" } }}
+                            >
+                                Accounts
                             </Link>
                             <Link
                                 component={RouterLink}
