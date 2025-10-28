@@ -12,7 +12,7 @@ import {
     MenuItem,}
     from "@mui/material";
 import axios from "axios";
-import {TransactionType} from "../../types/TransactionType.tsx";
+import type {TransactionType} from "../../types/TransactionType.tsx";
 
 type AddTransactionDialogProps = {
     open: boolean;
@@ -108,8 +108,8 @@ export default function AddTransactionDialog({ open, accountId , onClose, onAdd 
                         }}
                     >
                         <MenuItem value=""><em>Select Type</em></MenuItem>
-                        <MenuItem value={TransactionType.EXPENSE}>Expense</MenuItem>
-                        <MenuItem value={TransactionType.INCOME}>Income</MenuItem>
+                        <MenuItem value="EXPENSE">Expense</MenuItem>
+                        <MenuItem value="INCOME">Income</MenuItem>
                     </Select>
                     </FormControl>
                     <FormControl fullWidth margin="dense">

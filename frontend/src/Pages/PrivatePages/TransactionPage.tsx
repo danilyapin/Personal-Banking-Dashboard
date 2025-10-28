@@ -2,11 +2,15 @@ import {Box, CircularProgress, Container, Typography} from "@mui/material";
 import {useEffect, useState} from "react";
 import axios from "axios";
 import TransactionList from "../../Components/Transactions/TransactionList.tsx";
+import type {TransactionType} from "../../types/TransactionType.tsx";
 
 type Transaction = {
+    transactionId: string;
+    accountId: string;
+    categoryId: string;
     amount: number;
-    type: string;
-    category: string;
+    type: TransactionType;
+    date: string;
     description: string;
 }
 
