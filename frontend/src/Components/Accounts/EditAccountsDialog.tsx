@@ -16,7 +16,7 @@ import {
 }
     from "@mui/material";
 import axios from "axios";
-import {AccountType} from "../../types/AccountType.tsx";
+import type {AccountType} from "../../types/AccountType.tsx";
 
 type EditAccountProps = {
     open: boolean;
@@ -124,12 +124,12 @@ export default function EditAccountDialog({ open, onClose, onCloseConfirmDelete,
                             setEditedAccount({ ...editedAccount, type: e.target.value as AccountType })}
                         label="Type"
                     >
-                        <MenuItem value={AccountType.CASH}>Cash</MenuItem>
-                        <MenuItem value={AccountType.CHECKING}>Checking</MenuItem>
-                        <MenuItem value={AccountType.SAVINGS}>Savings</MenuItem>
-                        <MenuItem value={AccountType.CREDIT_CARD}>Credit Card</MenuItem>
-                        <MenuItem value={AccountType.INVESTMENT}>Investment</MenuItem>
-                        <MenuItem value={AccountType.OTHER}>Other</MenuItem>
+                        <MenuItem value="CASH">Cash</MenuItem>
+                        <MenuItem value="CHECKING">Checking</MenuItem>
+                        <MenuItem value="SAVINGS">Savings</MenuItem>
+                        <MenuItem value="CREDIT_CARD">Credit Card</MenuItem>
+                        <MenuItem value="INVESTMENT">Investment</MenuItem>
+                        <MenuItem value="OTHER">Other</MenuItem>
                     </Select>
                 </FormControl>
                 <TextField
@@ -159,7 +159,7 @@ export default function EditAccountDialog({ open, onClose, onCloseConfirmDelete,
                         },
                     }}
                 >
-                    Delete account
+                    Delete
                 </Button>
                 <Button
                     onClick={handleSubmit}
@@ -199,7 +199,7 @@ export default function EditAccountDialog({ open, onClose, onCloseConfirmDelete,
                             },
                         }}
                     >
-                        Delete account
+                        Delete
                     </Button>
                 </DialogActions>
                 <Snackbar
