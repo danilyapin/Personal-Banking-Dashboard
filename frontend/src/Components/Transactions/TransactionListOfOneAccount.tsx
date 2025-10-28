@@ -10,7 +10,7 @@ import {
     Typography, Button
 } from "@mui/material";
 import { useState} from "react";
-import {TransactionType} from "../../types/TransactionType.tsx";
+import type {TransactionType} from "../../types/TransactionType.tsx";
 import DeleteTransactionDialog from "./DeleteTransactionDialog.tsx";
 
 type Transaction = {
@@ -67,14 +67,26 @@ export default function TransactionListOfOneAccount({ transactions, onDeleteTran
                     <MenuItem value="">
                         <em>All</em>
                     </MenuItem>
-                    <MenuItem value={TransactionType.INCOME}>Income</MenuItem>
-                    <MenuItem value={TransactionType.EXPENSE}>Expense</MenuItem>
+                    <MenuItem value="INCOME">Income</MenuItem>
+                    <MenuItem value="EXPENSE">Expense</MenuItem>
                 </Select>
             </FormControl>
             {filteredTransactions.length === 0 ? (
                 <Stack alignItems="center" mt={3}>
                     <Typography variant="h6" fontWeight={600}>
                         No transactions found.
+                    </Typography>
+                    <Typography
+                        variant="body2"
+                        color="text.secondary"
+                        textAlign="center"
+                        mt={1}
+                        maxWidth={500}
+                    >
+                        Transactions let you track your income and expenses. Example:
+                        <strong>Amount:</strong> $50.00, <strong>Type:</strong> Expense, <strong>Category:</strong> Groceries, <strong>Description:</strong> Supermarket shopping.
+                        Make sure you have already created categories, so you can assign each transaction correctly.
+                        By adding transactions, you can see how your accounts are performing, understand your spending habits, and manage your finances effectively.
                     </Typography>
                 </Stack>
             ) : (
@@ -99,9 +111,9 @@ export default function TransactionListOfOneAccount({ transactions, onDeleteTran
                                 <Box textAlign="right">
                                     <Typography variant="h6" fontWeight={600}
                                                 sx={{
-                                                    color: trans.type === TransactionType.INCOME ? "green" : "red"
+                                                    color: trans.type === "INCOME" ? "green" : "red"
                                                 }}>
-                                        {trans.type === TransactionType.INCOME ? "+" : "-"}
+                                        {trans.type === "INCOME" ? "+" : "-"}
                                         ${trans.amount.toFixed(2)}
                                     </Typography>
                                     <Typography color="text.secondary" fontSize="0.9rem">

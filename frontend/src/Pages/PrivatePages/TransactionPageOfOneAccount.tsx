@@ -4,7 +4,7 @@ import axios from "axios";
 import {useParams} from "react-router-dom";
 import AddTransactionDialog from "../../Components/Transactions/AddTransactionDialog.tsx";
 import TransactionListOfOneAccount from "../../Components/Transactions/TransactionListOfOneAccount.tsx";
-import {TransactionType} from "../../types/TransactionType.tsx";
+import type {TransactionType} from "../../types/TransactionType.tsx";
 
 type Transaction = {
     transactionId: string;

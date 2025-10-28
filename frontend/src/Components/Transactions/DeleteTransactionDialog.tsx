@@ -7,7 +7,7 @@ import {
     DialogTitle,
     Typography
 } from "@mui/material";
-import {TransactionType} from "../../types/TransactionType.tsx";
+import type {TransactionType} from "../../types/TransactionType.tsx";
 
 
 type DeleteTransactionDialogProps = {
