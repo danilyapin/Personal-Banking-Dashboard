@@ -56,9 +56,9 @@ public class CategoryService {
     }
 
     private void verifyAccountOwnership(String username, String categoryId) {
-        Account account = accountRepository.findById(categoryId)
+        Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new RuntimeException("Account not found."));
-        if (!account.getUserId().equals(username)) {
+        if (!category.getUserId().equals(username)) {
             throw new RuntimeException("Unauthorized: account does not belong to user.");
         }
     }

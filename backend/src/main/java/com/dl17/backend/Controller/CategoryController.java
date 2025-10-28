@@ -28,7 +28,7 @@ public class CategoryController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Category> updateCategoryForUser(@PathVariable String id, CategoryDTO categoryDTO) {
+    public ResponseEntity<Category> updateCategoryForUser(@PathVariable String id, @RequestBody CategoryDTO categoryDTO) {
         String username = getLoggedInUsername();
         return categoryService.updateCategoryForUser(username, id, categoryDTO)
                 .map(ResponseEntity::ok)
