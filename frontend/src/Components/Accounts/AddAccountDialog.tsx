@@ -14,7 +14,7 @@ import {
     Alert}
     from "@mui/material";
 import axios from "axios";
-import {AccountType} from "../../types/AccountType.tsx";
+import type {AccountType} from "../../types/AccountType.tsx";
 
 type AddAccountDialogProps = {
     open: boolean;
@@ -96,12 +96,12 @@ export default function AddAccountDialog({ open, onClose, onAdd }: AddAccountDia
                         }}
                     >
                         <MenuItem value=""><em>Select Type</em></MenuItem>
-                        <MenuItem value={AccountType.CASH}>Cash</MenuItem>
-                        <MenuItem value={AccountType.CHECKING}>Checking</MenuItem>
-                        <MenuItem value={AccountType.SAVINGS}>Savings</MenuItem>
-                        <MenuItem value={AccountType.CREDIT_CARD}>Credit Card</MenuItem>
-                        <MenuItem value={AccountType.INVESTMENT}>Investment</MenuItem>
-                        <MenuItem value={AccountType.OTHER}>Other</MenuItem>
+                        <MenuItem value="CASH">Cash</MenuItem>
+                        <MenuItem value="CHECKING">Checking</MenuItem>
+                        <MenuItem value="SAVINGS">Savings</MenuItem>
+                        <MenuItem value="CREDIT_CARD">Credit Card</MenuItem>
+                        <MenuItem value="INVESTMENT">Investment</MenuItem>
+                        <MenuItem value="OTHER">Other</MenuItem>
                     </Select>
                 </FormControl>
                 <TextField

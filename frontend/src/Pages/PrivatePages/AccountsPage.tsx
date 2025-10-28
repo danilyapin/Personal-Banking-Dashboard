@@ -12,7 +12,8 @@ import {
     Snackbar,
     Alert,
 } from "@mui/material";
-import { AccountType } from "../../types/AccountType.tsx";
+import type { AccountType }  from "../../types/AccountType.tsx";
+import type {TransactionType} from "../../types/TransactionType.tsx";
 
 type Account = {
     accountId: string;
@@ -21,8 +22,18 @@ type Account = {
     balance: number;
 };
 
+type Transaction = {
+    transactionId: string;
+    accountId: string;
+    type: TransactionType;
+    amount: number;
+    date: string;
+    description: string;
+};
+
 export default function AccountsPage() {
     const [accounts, setAccounts] = useState<Account[]>([]);
+    const [transactions, setTransactions] = useState<Transaction[]>([]);
     const [loading, setLoading] = useState(true);
     const [open, setOpen] = useState<boolean>(false);
     const [editingAccount, setEditingAccount] = useState<Account | null>(null);
@@ -35,19 +46,19 @@ export default function AccountsPage() {
         const token = localStorage.getItem("token");
         setLoading(true);
 
-        axios
-            .get("/api/accounts", {
-                headers: { Authorization: `Bearer ${token}` },
-            })
-            .then((response) => {
-                setAccounts(response.data);
+        const fetchAccounts = axios.get("/api/accounts", { headers: { Authorization: `Bearer ${token}` } });
+        const fetchTransactions = axios.get("/api/transactions", { headers: { Authorization: `Bearer ${token}` } });
+
+        Promise.all([fetchAccounts, fetchTransactions])
+            .then(([accRes, transRes]) => {
+                setAccounts(accRes.data);
+                setTransactions(transRes.data);
                 setLoading(false);
             })
             .catch((error) => {
-                console.error("Error fetching accounts", error);
+                console.error("Error loading data", error);
                 setLoading(false);
-                showSnackbar("Failed to load accounts", "error")
-
+                showSnackbar("Failed to load accounts or transactions", "error");
             });
     }, []);
 
@@ -105,7 +116,7 @@ export default function AccountsPage() {
             <Typography variant="h4" mb={3} fontWeight={600}>
                 My Accounts
             </Typography>
-            <AccountList accounts={accounts} onEdit={handleEditOpen} />
+            <AccountList accounts={accounts} transactions={transactions} onEdit={handleEditOpen} />
             <Box textAlign="center" mt={4}>
                 <Button variant="contained" color="primary" onClick={() => setOpen(true)}>
                     Add New Account
