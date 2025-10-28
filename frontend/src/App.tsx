@@ -13,6 +13,7 @@ import TransactionPageOfOneAccount from "./Pages/PrivatePages/TransactionPageOfO
 import CategoriesPage from "./Pages/PrivatePages/CategoriesPage.tsx";
 import ImpressumPage from "./Pages/PublicPages/ImpressumPage.tsx";
 import AuthWatcher from "./Utils/AuthWatcher.tsx";
+import GettingStartedPage from "./Pages/PublicPages/GettingStartedPage.tsx";
 
 function App() {
 
@@ -27,6 +28,7 @@ function App() {
             <Route path="/" element={<LoginPage />} />
             <Route path="/about-us" element={<AboutUsPage />} />
             <Route path="/impressum" element={<ImpressumPage />} />
+            <Route path="/getting-started" element={<GettingStartedPage />} />
             <Route
                 path="/dashboard"
                 element={

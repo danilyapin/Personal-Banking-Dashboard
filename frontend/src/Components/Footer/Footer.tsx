@@ -43,6 +43,15 @@ export default function Footer() {
                 >
                     About Us
                 </Link>
+                <Link
+                    component={RouterLink}
+                    to="/getting-started"
+                    underline="hover"
+                    color="inherit"
+                    sx={{ cursor: "pointer" }}
+                >
+                    Getting Started
+                </Link>
             </Box>
 
             <Typography

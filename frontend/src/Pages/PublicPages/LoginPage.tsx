@@ -7,6 +7,7 @@ export default function LoginPage() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
+    const [loading, setLoading] = useState(false);
     const [snackBarOpen, setSnackBarOpen] = useState(false);
 
     const navigate = useNavigate();
@@ -25,6 +26,7 @@ export default function LoginPage() {
             localStorage.setItem("token", token);
 
             setSnackBarOpen(true);
+            setLoading(true)
 
             setTimeout(() => {
                 navigate("/dashboard");
@@ -33,6 +35,7 @@ export default function LoginPage() {
         } catch (err) {
             console.error(err);
             setError("Error logging in");
+            setLoading(false);
 
             setTimeout(() => {
                 setError("")
@@ -95,7 +98,7 @@ export default function LoginPage() {
                         fullWidth
                         sx={{ mt: 1, py: 1.2, fontWeight: 600 }}
                     >
-                        Login
+                        {loading ? "Login..." : "Login"}
                     </Button>
                 </Stack>
             </form>
