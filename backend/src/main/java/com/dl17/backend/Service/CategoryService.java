@@ -1,9 +1,7 @@
 package com.dl17.backend.Service;
 
 import com.dl17.backend.DTO.CategoryDTO;
-import com.dl17.backend.Model.Account.Account;
 import com.dl17.backend.Model.Category;
-import com.dl17.backend.Repository.AccountRepository;
 import com.dl17.backend.Repository.CategoryRepository;
 import org.springframework.stereotype.Service;
 
@@ -14,11 +12,9 @@ import java.util.Optional;
 public class CategoryService {
 
     private final CategoryRepository categoryRepository;
-    private final AccountRepository accountRepository;
 
-    public CategoryService(CategoryRepository categoryRepository, AccountRepository accountRepository) {
+    public CategoryService(CategoryRepository categoryRepository) {
         this.categoryRepository = categoryRepository;
-        this.accountRepository = accountRepository;
     }
 
     public List<Category> getAllCategoriesForUser(String username) {

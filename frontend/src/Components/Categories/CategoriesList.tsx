@@ -47,7 +47,15 @@ export default function CategoriesList({categories, onEdit}: CategoriesListProps
                 ) : (
                     categories.map((cat) => {
                         return (
-                            <Card key={cat.categoryId} sx={{ p: 2, borderRadius: 3, boxShadow: 3 }}>
+                            <Card
+                                key={cat.categoryId}
+                                elevation={3}
+                                sx={{
+                                    p: 1,
+                                    borderRadius: 3,
+                                    transition: '0.3s',
+                                    '&:hover': { boxShadow: 6 },
+                                }}>
                                 <CardContent
                                     sx={{
                                         display: "flex",
