@@ -1,4 +1,4 @@
-import {Box, CircularProgress, Container, Typography} from "@mui/material";
+import {Alert, Box, CircularProgress, Container, Snackbar, Typography} from "@mui/material";
 import {useEffect, useState} from "react";
 import axios from "axios";
 import TransactionList from "../../Components/Transactions/TransactionList.tsx";
@@ -14,15 +14,39 @@ type Transaction = {
     description: string;
 }
 
+type Account = {
+    accountId: string;
+    name: string;
+}
+
 export default function TransactionPage(){
 
+    const [accounts, setAccounts] = useState<Account[]>([]);
     const [transactions, setTransactions] = useState<Transaction[]>([])
     const [loading, setLoading] = useState(false);
+    const [snackbarOpen, setSnackbarOpen] = useState(false);
+    const [snackbarMessage, setSnackbarMessage] = useState("")
+    const [snackbarSeverity, setSnackbarSeverity] = useState<"success" | "error">("success")
 
     useEffect(() => {
         const token = localStorage.getItem("token");
-
         setLoading(true);
+
+        const fetchAccounts = axios.get("/api/accounts", { headers: { Authorization: `Bearer ${token}` } });
+        const fetchTransactions = axios.get("/api/transactions", { headers: { Authorization: `Bearer ${token}` } });
+
+        Promise.all([fetchAccounts, fetchTransactions])
+            .then(([accRes, transRes]) => {
+                setAccounts(accRes.data);
+                setTransactions(transRes.data);
+                setLoading(false);
+            })
+            .catch((error) => {
+                console.error("Error loading data", error);
+                setLoading(false);
+                showSnackbar("Error loading data", "success");
+            })
+
         axios.get(`/api/transactions`, {
             headers: {
                 Authorization: `Bearer ${token}`,
@@ -37,6 +61,12 @@ export default function TransactionPage(){
                 setLoading(false);
             })
     }, []);
+
+    const showSnackbar = (message: string, severity: typeof snackbarSeverity = "success") => {
+        setSnackbarMessage(message)
+        setSnackbarSeverity(severity);
+        setSnackbarOpen(true);
+    }
 
     if (loading) {
         return (
@@ -60,7 +90,22 @@ export default function TransactionPage(){
             <Typography variant="h4" mb={3} fontWeight={600}>
                 My All Transactions
             </Typography>
-            <TransactionList transactions={transactions} />
+            <TransactionList transactions={transactions} accounts={accounts}/>
+            <Snackbar
+                open={snackbarOpen}
+                autoHideDuration={3000}
+                onClose={() => setSnackbarOpen(false)}
+                anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+            >
+                <Alert
+                    onClose={() => setSnackbarOpen(false)}
+                    severity={snackbarSeverity}
+                    sx={{ width: '100%', border: '1px solid', borderColor: 'grey.500'  }}
+                >
+                    {snackbarMessage}
+                </Alert>
+            </Snackbar>
         </Container>
+
     )
 }
