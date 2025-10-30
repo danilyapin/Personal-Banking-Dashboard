@@ -41,4 +41,18 @@ class LoginServiceTest {
         verify(bCryptPasswordEncoder, times(1)).matches(userDTO.getPassword(), user.getPassword());
         verify(jwtUtil, times(1)).generateToken(user.getUsername());
     }
+
+    @Test
+    void getUserByUserName() {
+        User mockUser = User.builder()
+                .userId("user123")
+                .username("Test123")
+                .build();
+
+        when(userRepository.findByUsername(mockUser.getUsername())).thenReturn(Optional.of(mockUser));
+
+        assertEquals(mockUser, loginService.getUserByUserName("Test123"));
+
+        verify(userRepository, times(1)).findByUsername(mockUser.getUsername());
+    }
 }
