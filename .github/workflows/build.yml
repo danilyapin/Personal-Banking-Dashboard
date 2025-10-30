@@ -39,4 +39,5 @@ jobs:
           -Dsonar.projectKey=danilyapin_Personal-Banking-Dashboard \
           -Dsonar.organization=danilyapin \
           -Dsonar.host.url=https://sonarcloud.io \
-          -Dsonar.login=${SONAR_TOKEN}
+          -Dsonar.login=${SONAR_TOKEN} \
+          -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
