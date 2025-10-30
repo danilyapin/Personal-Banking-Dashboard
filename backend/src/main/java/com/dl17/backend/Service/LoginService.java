@@ -25,11 +25,15 @@ public class LoginService {
     public String login(UserDTO userDTO) {
         User user = userRepository.findByUsername(userDTO.getUsername())
                 .orElseThrow(() -> new UserNotFoundException("User not found."));
-
         if (!bCryptPasswordEncoder.matches(userDTO.getPassword(), user.getPassword())) {
             throw new InvalidPasswordException("Invalid Password.");
         }
         return jwtUtil.generateToken(user.getUsername());
+    }
+
+    public User getUserByUserName(String username){
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new UserNotFoundException("User not found."));
     }
 
 }

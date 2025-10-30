@@ -36,7 +36,8 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/api/accounts/**",
                                 "/api/transactions/**",
-                                "/api/categories/**").authenticated()
+                                "/api/categories/**",
+                                "/api/login/**").authenticated()
                         .anyRequest().authenticated()
                 )
                 .httpBasic().disable();
