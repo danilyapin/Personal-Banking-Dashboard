@@ -58,7 +58,7 @@ export default function AccountsPage() {
             .catch((error) => {
                 console.error("Error loading data", error);
                 setLoading(false);
-                showSnackbar("Failed to load accounts or transactions", "error");
+                showSnackbar("Failed to load data", "error");
             });
     }, []);
 

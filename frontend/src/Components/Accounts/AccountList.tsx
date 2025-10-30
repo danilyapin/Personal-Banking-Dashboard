@@ -98,21 +98,21 @@ export default function AccountList({ accounts, transactions, onEdit }: AccountL
                     </Stack>
                 ) : (
                     filteredAccounts.map((acc) => {
+
                         const accTransactions = transactions.filter(t => t.accountId === acc.accountId);
-
-                        const incomeSum = accTransactions
-                            .filter(t => t.type === "INCOME")
-                            .reduce((sum, t) => sum + t.amount, 0);
-
-                        const expenseSum = accTransactions
-                            .filter(t => t.type === "EXPENSE")
-                            .reduce((sum, t) => sum + t.amount, 0);
-
-                        const difference = incomeSum - expenseSum;
-                        const currentBalance = acc.balance + difference;
+                        const difference = accTransactions.reduce((sum, t) => sum + t.amount, 0)
+                        const currentBalance = acc.balance + accTransactions.reduce((sum, t) => sum + t.amount, 0)
 
                         return (
-                            <Card key={acc.accountId} sx={{ p: 2, borderRadius: 3, boxShadow: 3 }}>
+                            <Card
+                                key={acc.accountId}
+                                elevation={3}
+                                sx={{
+                                    borderRadius: 3,
+                                    transition: '0.3s',
+                                    '&:hover': { boxShadow: 6 },
+                                }}
+                            >
                                 <CardContent
                                     sx={{
                                         display: "flex",
@@ -126,13 +126,13 @@ export default function AccountList({ accounts, transactions, onEdit }: AccountL
                                     </Box>
                                     <Box textAlign="right">
                                         <Typography variant="h6" fontWeight={600}>
-                                            ${currentBalance.toFixed(2)}
+                                            € {currentBalance.toFixed(2)}
                                             {difference !== 0 && (
                                                 <Typography
                                                     component="span"
                                                     sx={{ color: difference >= 0 ? "green" : "red", ml: 1 }}
                                                 >
-                                                    ({difference >= 0 ? "+" : "-"}${Math.abs(difference).toFixed(2)})
+                                                    ({difference >= 0 ? "+" : "-"}€ {Math.abs(difference).toFixed(2)})
                                                 </Typography>
                                             )}
                                         </Typography>

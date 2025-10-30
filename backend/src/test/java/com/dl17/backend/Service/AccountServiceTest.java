@@ -99,7 +99,11 @@ class AccountServiceTest {
                 .balance(500.0)
                 .build();
 
-        AccountDTO dto = new AccountDTO("NewName", AccountType.CASH, 500.0);
+        AccountDTO dto = AccountDTO.builder()
+                .name("NewName")
+                .type(AccountType.CASH)
+                .balance(450)
+                .build();
 
         when(accountRepository.findById("abc123")).thenReturn(Optional.of(account1));
         when(accountRepository.save(any(Account.class))).thenReturn(account1);
