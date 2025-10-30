@@ -5,6 +5,7 @@ import {useParams} from "react-router-dom";
 import AddTransactionDialog from "../../Components/Transactions/AddTransactionDialog.tsx";
 import TransactionListOfOneAccount from "../../Components/Transactions/TransactionListOfOneAccount.tsx";
 import type {TransactionType} from "../../types/TransactionType.tsx";
+import type {AccountType} from "../../types/AccountType.tsx";
 
 type Transaction = {
     transactionId: string;
@@ -17,10 +18,18 @@ type Transaction = {
     description: string;
 }
 
+type Account = {
+    accountId: string;
+    name: string;
+    type: AccountType;
+    balance: number;
+};
+
 export default function TransactionPageOfOneAccount(){
 
     const { accountId } = useParams();
     const [open, setOpen] = useState<boolean>(false);
+    const [accounts, setAccounts] = useState<Account[]>([]);
     const [transactions, setTransactions] = useState<Transaction[]>([])
     const [loading, setLoading] = useState(false);
     const [snackbarOpen, setSnackbarOpen] = useState(false);
@@ -29,23 +38,23 @@ export default function TransactionPageOfOneAccount(){
 
     useEffect(() => {
         const token = localStorage.getItem("token");
-
         setLoading(true);
-        axios.get(`/api/transactions/account/${accountId}`, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            }
-        })
-            .then((response) => {
-                setTransactions(response.data);
+
+        const fetchAccounts = axios.get(`/api/accounts`, { headers: { Authorization: `Bearer ${token}` } });
+        const fetchTransactions = axios.get(`/api/transactions/account/${accountId}`, { headers: { Authorization: `Bearer ${token}` } });
+
+        Promise.all([fetchAccounts, fetchTransactions])
+            .then(([accRes, transRes]) => {
+                setAccounts(accRes.data);
+                setTransactions(transRes.data);
                 setLoading(false);
             })
             .catch((error) => {
-                console.log("Error fetching transactions", error);
+                console.log("Error loading data", error);
                 setLoading(false);
-                showSnackbar("Error fetching transactions", error);
+                showSnackbar("Failed to load data", error.message);
             })
-    }, [accountId]);
+    }, []);
 
     const handleAddTransaction = (transaction: Transaction) => {
         setTransactions((prev) => [...prev, transaction]);
@@ -63,11 +72,14 @@ export default function TransactionPageOfOneAccount(){
         setSnackbarOpen(true);
     }
 
+    const currentAccount = accounts.find(account => account.accountId === accountId);
+
     return(
         <>
             <Container sx={{ mt: 4 }}>
                 <Typography variant="h4" mb={3} fontWeight={600}>
                     My Transactions
+                    {currentAccount && ` - ${currentAccount.name}`}
                 </Typography>
                 <TransactionListOfOneAccount
                     transactions={transactions}

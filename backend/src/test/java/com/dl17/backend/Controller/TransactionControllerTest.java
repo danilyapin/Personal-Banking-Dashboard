@@ -16,7 +16,6 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -67,7 +66,7 @@ class TransactionControllerTest {
 
         when(transactionService.getTransactionsByAccount("user1234", "account1234")).thenReturn(List.of(transaction1, transaction2));
 
-        mockMvc.perform(get("/api/transactions/account/account1234/")
+        mockMvc.perform(get("/api/transactions/account/account1234")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].transactionId").value(transaction1.getTransactionId()))

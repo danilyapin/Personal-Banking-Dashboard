@@ -1,6 +1,7 @@
-import {Box, Card, CardContent, FormControl, InputLabel, MenuItem, Select, Stack, Typography} from "@mui/material";
-import {useState} from "react";
-import {TransactionType} from "../../types/TransactionType.tsx";
+import { DataGrid } from "@mui/x-data-grid";
+import { Button, Stack, Typography } from "@mui/material";
+import type { TransactionType } from "../../types/TransactionType.tsx";
+import {useNavigate} from "react-router-dom";
 
 type Transaction = {
     transactionId: string;
@@ -12,89 +13,136 @@ type Transaction = {
     description: string;
 };
 
+type Account = {
+    accountId: string;
+    name: string;
+}
+
 type TransactionListProps = {
     transactions: Transaction[];
+    accounts: Account[];
 };
 
-export default function TransactionList({ transactions }: TransactionListProps) {
-    const [filterType, setFilterType] = useState<TransactionType | "">("");
+export default function TransactionList({ transactions, accounts }: TransactionListProps) {
+    const formatAmount = (amount: number, type: "INCOME" | "EXPENSE") =>
+        `${type === "INCOME" ? "+" : ""}${amount.toFixed(2)} €`;
 
-    const filteredTransactions =
-        filterType === ""
-            ? transactions
-            : transactions.filter((transaction) => transaction.type === filterType);
+    const navigate = useNavigate();
 
-    const displayTransactionType = (type: TransactionType) => {
-        return type
-            .toLowerCase()
-            .replace(/_/g, " ")
-            .replace(/\b\w/g, (t) => t.toUpperCase());
+    const formatDate = (dateStr: string) => {
+        const date = new Date(dateStr);
+        const day = String(date.getDate()).padStart(2, "0");
+        const month = String(date.getMonth() + 1).padStart(2, "0");
+        const year = date.getFullYear();
+        const hours = String(date.getHours()).padStart(2, "0");
+        const minutes = String(date.getMinutes()).padStart(2, "0");
+        return `${day}.${month}.${year} ${hours}:${minutes}`;
+    };
+
+    const columns = [
+        {
+            field: "accountName",
+            headerName: "Account",
+            flex: 1.5,
+            renderCell: (params) => {
+                const row = params.row as Transaction;
+                return getAccountName(row.accountId);
+            },
+        },
+        {
+            field: "description",
+            headerName: "Description",
+            flex: 2
+        },
+        {
+            field: "amount",
+            headerName: "Amount",
+            flex: 1,
+            renderCell: (params) => {
+                const row = params.row as Transaction;
+                return formatAmount(row.amount, row.type);
+            },
+        },
+        {
+            field: "date",
+            headerName: "Date",
+            flex: 1.5,
+            renderCell: (params) => {
+                const row = params.row as Transaction;
+                return formatDate(row.date);
+            },
+        },
+    ];
+
+    const getAccountName = (accountId: string) => {
+        const account = accounts.find((account) => account.accountId === accountId);
+        return account ? account.name : "Unknown Account";
+    }
+
+    const rows = transactions.map((t) => ({
+        ...t,
+        id: t.transactionId,
+        accountName: getAccountName(t.accountId)
+    }));
+
+    const handleExport = () => {
+        const header = columns.map((col) => col.headerName).join(";");
+        const csvRows = rows.map((row) =>
+            [row.accountName, row.description, formatAmount(row.amount, row.type), formatDate(row.date)].join(";")
+        );
+        const csvContent = [header, ...csvRows].join("\n");
+        const blob = new Blob(["\uFEFF" + csvContent], { type: "text/csv;charset=utf-8;" });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.setAttribute("href", url);
+        link.setAttribute("download", "transactions.csv");
+        link.click();
+    };
+
+    if (rows.length === 0) {
+        return (
+            <Stack alignItems="center" mt={3} spacing={2}>
+                <Typography variant="h6" fontWeight={600}>
+                    No transactions found.
+                </Typography>
+                <Typography variant="body2" color="text.secondary" textAlign="center" maxWidth={450}>
+                    Transactions help you track your income and expenses.
+                    To start, you need to create an account first. Once an account is created, click "View Transactions"
+                    to add your first transaction and manage your finances effectively.
+                </Typography>
+                <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => navigate("/accounts")}
+                >
+                    Go to Accounts
+                </Button>
+            </Stack>
+        );
     }
 
     return (
-        <div>
-            <FormControl fullWidth margin="normal">
-                <InputLabel>Filter by Type</InputLabel>
-                <Select
-                    value={filterType}
-                    onChange={(e) => setFilterType(e.target.value as TransactionType)}
-                    label="Filter by Type"
+        <div style={{ height: 500, width: "100%" }}>
+            <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 8 }}>
+                <Button
+                    onClick={handleExport}
+                    variant="contained"
+                    color="primary"
                 >
-                    <MenuItem value="">
-                        <em>All</em>
-                    </MenuItem>
-                    <MenuItem value={TransactionType.INCOME}>Income</MenuItem>
-                    <MenuItem value={TransactionType.EXPENSE}>Expense</MenuItem>
-                </Select>
-            </FormControl>
-            {filteredTransactions.length === 0 ? (
-                <Stack alignItems="center" mt={3}>
-                    <Typography variant="h6" fontWeight={600}>
-                        No transactions found.
-                    </Typography>
-                </Stack>
-            ) : (
-                <Stack spacing={3} mt={2}>
-                    {filteredTransactions.map((trans) => (
-                        <Card key={trans.transactionId} sx={{ p: 2, borderRadius: 3, boxShadow: 3 }}>
-                            <CardContent
-                                sx={{
-                                    display: "flex",
-                                    justifyContent: "space-between",
-                                    alignItems: "center",
-                                }}
-                            >
-                                <Box>
-                                    <Typography variant="h6" fontWeight={500}>
-                                        {trans.description}
-                                    </Typography>
-                                    <Typography>
-                                        {displayTransactionType(trans.type)}
-                                    </Typography>
-                                </Box>
-                                <Box textAlign="right">
-                                    <Typography variant="h6" fontWeight={600}
-                                    sx={{
-                                        color: trans.type === TransactionType.INCOME ? "green" : "red"
-                                    }}>
-                                        {trans.type === TransactionType.INCOME ? "+" : "-"}
-                                        ${trans.amount.toFixed(2)}
-                                    </Typography>
-                                    <Typography color="text.secondary" fontSize="0.9rem">
-                                        {new Date(trans.date).toLocaleString("de-DE", {
-                                            day: "2-digit",
-                                            month: "2-digit",
-                                            year: "numeric",
-                                            hour: "2-digit",
-                                            minute: "2-digit",
-                                        })}
-                                    </Typography>
-                                </Box>
-                            </CardContent>
-                        </Card>
-                    ))}
-                </Stack>
-            )}
+                    Export CSV
+                </Button>
+            </div>
+            <DataGrid
+                rows={rows}
+                columns={columns}
+                pageSize={5}
+                rowsPerPageOptions={[5]}
+                sx={{
+                    "& .MuiDataGrid-cell": {
+                        userSelect: "none",
+                    },
+                }}
+            />
         </div>
     );
 }

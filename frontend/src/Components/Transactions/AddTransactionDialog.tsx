@@ -48,15 +48,18 @@ export default function AddTransactionDialog({ open, accountId , onClose, onAdd 
     const handleSubmit = async () => {
         const token = localStorage.getItem("token");
         try {
+
+            const rawAmount = Math.abs(Number(newTransaction.amount));
+            const adjustedAmount = newTransaction.type === "EXPENSE" ? -rawAmount : rawAmount;
+
             const response = await axios.post(`/api/transactions/account/${accountId}`, {
-                amount: newTransaction.amount,
+                amount: adjustedAmount,
                 type: newTransaction.type,
                 categoryId: newTransaction.category,
                 description: newTransaction.description,
             }, {
                 headers: { Authorization: `Bearer ${token}` }
             });
-
             onAdd(response.data);
             setNewTransaction({ amount: "", type: "", category: "", description: ""});
             onClose();

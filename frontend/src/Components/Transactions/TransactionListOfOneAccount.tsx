@@ -92,7 +92,16 @@ export default function TransactionListOfOneAccount({ transactions, onDeleteTran
             ) : (
                 <Stack spacing={3} mt={2}>
                     {filteredTransactions.map((trans) => (
-                        <Card key={trans.transactionId} sx={{ p: 2, borderRadius: 3, boxShadow: 3 }}>
+                        <Card
+                            key={trans.transactionId}
+                            elevation={3}
+                            sx={{
+                                p: 4,
+                                borderRadius: 3,
+                                transition: '0.3s',
+                                '&:hover': { boxShadow: 6 },
+                            }}
+                        >
                             <CardContent
                                 sx={{
                                     display: "flex",
@@ -111,10 +120,9 @@ export default function TransactionListOfOneAccount({ transactions, onDeleteTran
                                 <Box textAlign="right">
                                     <Typography variant="h6" fontWeight={600}
                                                 sx={{
-                                                    color: trans.type === "INCOME" ? "green" : "red"
+                                                    color: trans.amount >= 0 ? "green" : "red"
                                                 }}>
-                                        {trans.type === "INCOME" ? "+" : "-"}
-                                        ${trans.amount.toFixed(2)}
+                                        {trans.amount >= 0 ? "+" : "-"}€ {Math.abs(trans.amount).toFixed(2)}
                                     </Typography>
                                     <Typography color="text.secondary" fontSize="0.9rem">
                                         {new Date(trans.date).toLocaleString("de-DE", {
