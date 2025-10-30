@@ -8,6 +8,7 @@ import com.dl17.backend.Repository.AccountRepository;
 import com.dl17.backend.Repository.TransactionRepository;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -19,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+@SpringBootTest
 class TransactionServiceTest {
 
     private final TransactionRepository transactionRepository = Mockito.mock(TransactionRepository.class);

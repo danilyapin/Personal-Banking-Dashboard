@@ -5,6 +5,7 @@ import com.dl17.backend.Model.Category;
 import com.dl17.backend.Repository.CategoryRepository;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-
+@SpringBootTest
 class CategoryServiceTest {
 
     private final CategoryRepository categoryRepository = Mockito.mock(CategoryRepository.class);

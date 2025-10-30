@@ -6,6 +6,7 @@ import com.dl17.backend.Model.Account.AccountType;
 import com.dl17.backend.Repository.AccountRepository;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,6 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+@SpringBootTest
 class AccountServiceTest {
 
     private final AccountRepository accountRepository = Mockito.mock(AccountRepository.class);

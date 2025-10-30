@@ -5,6 +5,7 @@ import com.dl17.backend.Model.User;
 import com.dl17.backend.Repository.UserRepository;
 import com.dl17.backend.Util.JwtUtil;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.Optional;
@@ -12,6 +13,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
+@SpringBootTest
 class LoginServiceTest {
 
     private final UserRepository userRepository = mock(UserRepository.class);
