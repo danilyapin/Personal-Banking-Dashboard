@@ -31,11 +31,11 @@ export default function NavDrawerContent({ token, onLogout, onClose }: Props) {
                         <ListItemButton component={RouterLink} to="/dashboard">
                             <ListItemText primary="Dashboard" />
                         </ListItemButton>
-                        <ListItemButton component={RouterLink} to="/accounts">
-                            <ListItemText primary="Accounts" />
-                        </ListItemButton>
                         <ListItemButton component={RouterLink} to="/categories">
                             <ListItemText primary="Categories" />
+                        </ListItemButton>
+                        <ListItemButton component={RouterLink} to="/accounts">
+                            <ListItemText primary="Accounts" />
                         </ListItemButton>
                         <ListItemButton component={RouterLink} to="/transactions">
                             <ListItemText primary="Transactions" />
@@ -55,6 +55,12 @@ export default function NavDrawerContent({ token, onLogout, onClose }: Props) {
                         </ListItemButton>
                         <ListItemButton component={RouterLink} to="/register">
                             <ListItemText primary="Register" />
+                        </ListItemButton>
+                        <ListItemButton component={RouterLink} to="/impressum">
+                            <ListItemText primary="Impressum" />
+                        </ListItemButton>
+                        <ListItemButton component={RouterLink} to="/getting-started">
+                            <ListItemText primary="Getting Started" />
                         </ListItemButton>
                     </>
                 )}
