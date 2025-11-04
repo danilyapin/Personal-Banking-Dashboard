@@ -1,4 +1,4 @@
-import { DataGrid } from "@mui/x-data-grid";
+import { DataGrid, type GridRenderCellParams } from "@mui/x-data-grid";
 import { Button, Stack, Typography } from "@mui/material";
 import type { TransactionType } from "../../types/TransactionType.tsx";
 import {useNavigate} from "react-router-dom";
@@ -44,7 +44,7 @@ export default function TransactionList({ transactions, accounts }: TransactionL
             field: "accountName",
             headerName: "Account",
             flex: 1.5,
-            renderCell: (params) => {
+            renderCell: (params: GridRenderCellParams<Transaction>) => {
                 const row = params.row as Transaction;
                 return getAccountName(row.accountId);
             },
@@ -58,7 +58,7 @@ export default function TransactionList({ transactions, accounts }: TransactionL
             field: "amount",
             headerName: "Amount",
             flex: 1,
-            renderCell: (params) => {
+            renderCell: (params: GridRenderCellParams<Transaction>) => {
                 const row = params.row as Transaction;
                 return formatAmount(row.amount, row.type);
             },
@@ -67,7 +67,7 @@ export default function TransactionList({ transactions, accounts }: TransactionL
             field: "date",
             headerName: "Date",
             flex: 1.5,
-            renderCell: (params) => {
+            renderCell: (params: GridRenderCellParams<Transaction>) => {
                 const row = params.row as Transaction;
                 return formatDate(row.date);
             },
@@ -135,8 +135,8 @@ export default function TransactionList({ transactions, accounts }: TransactionL
             <DataGrid
                 rows={rows}
                 columns={columns}
-                pageSize={5}
-                rowsPerPageOptions={[5]}
+                paginationModel={{ pageSize: 5, page: 0}}
+                pageSizeOptions={[5]}
                 sx={{
                     "& .MuiDataGrid-cell": {
                         userSelect: "none",

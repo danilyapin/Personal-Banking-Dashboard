@@ -45,11 +45,6 @@ export default function TransactionListOfOneAccount({ transactions, onDeleteTran
             .replace(/\b\w/g, (t) => t.toUpperCase());
     }
 
-    const handleOpenDeleteDialog = (transaction: Transaction) => {
-        setSelectedTransaction(transaction);
-        setOpenDeleteDialog(true);
-    }
-
     const handleCloseDeleteDialog = () => {
         setOpenDeleteDialog(false);
         setSelectedTransaction(null);

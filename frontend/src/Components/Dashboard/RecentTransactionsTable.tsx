@@ -3,12 +3,11 @@ import type {TransactionType} from "../../types/TransactionType.tsx";
 
 type Transaction = {
     transactionId: string;
-    userId: string;
     accountId: string;
     categoryId: string;
-    type: TransactionType;
     amount: number;
-    date: number;
+    type: TransactionType;
+    date: string;
     description: string;
 }
 

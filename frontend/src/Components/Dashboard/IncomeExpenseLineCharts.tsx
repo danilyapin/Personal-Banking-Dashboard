@@ -8,7 +8,7 @@ type MonthlyData = {
 };
 
 type IncomeExpenseLineChartProps = {
-    monthlyData: MonthlyData;
+    monthlyData: MonthlyData[];
 };
 
 export default function IncomeExpenseLineChart({ monthlyData }: IncomeExpenseLineChartProps) {

@@ -1,7 +1,10 @@
 import { Card, CardContent, Typography, Box } from "@mui/material";
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
 
-const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#AF19FF"];
+function getColor(index: number, total: number) {
+    const hue = (index * 360) / Math.max(total, 1);
+    return `hsl(${hue}, 70%, 50%)`;
+}
 
 type ExpenseData = {
     category: string;
@@ -39,7 +42,7 @@ export default function ExpensesPieChart({ expensesByCategory }: ExpensesPieChar
                                 label={false}
                             >
                                 {expensesByCategory.map((_, index) => (
-                                    <Cell key={index} fill={COLORS[index % COLORS.length]} />
+                                    <Cell key={index} fill={getColor(index, expensesByCategory.length)}  />
                                 ))}
                             </Pie>
                             <Tooltip formatter={(value: number) => `€${value}`} />
@@ -68,7 +71,7 @@ export default function ExpensesPieChart({ expensesByCategory }: ExpensesPieChar
                                 sx={{
                                     width: 16,
                                     height: 16,
-                                    backgroundColor: COLORS[index % COLORS.length],
+                                    backgroundColor: getColor(index, expensesByCategory.length),
                                     borderRadius: "50%",
                                     mr: 0.5,
                                 }}
