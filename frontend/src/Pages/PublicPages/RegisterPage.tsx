@@ -2,6 +2,7 @@ import {useState} from "react";
 import axios from "axios";
 import {Box, TextField, Button, Typography, Stack, Alert, Link} from "@mui/material";
 import {useNavigate, Link as RouterLink} from "react-router-dom";
+import { API_URL } from "../../config.ts";
 import validator from "validator";
 
 export default function RegisterPage() {
@@ -35,7 +36,7 @@ export default function RegisterPage() {
         }
 
         try {
-            await axios.post("/api/register", {
+            await axios.post(`${API_URL}/api/register`, {
                 username,
                 password
             });

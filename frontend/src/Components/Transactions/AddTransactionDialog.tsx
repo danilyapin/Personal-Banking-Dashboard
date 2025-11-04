@@ -13,6 +13,7 @@ import {
     from "@mui/material";
 import axios from "axios";
 import type {TransactionType} from "../../types/TransactionType.tsx";
+import { API_URL } from "../../config";
 
 type AddTransactionDialogProps = {
     open: boolean;
@@ -37,7 +38,7 @@ export default function AddTransactionDialog({ open, accountId , onClose, onAdd 
     useEffect(() => {
         if(open) {
             const token = localStorage.getItem("token");
-            axios.get("/api/categories", {
+            axios.get(`${API_URL}/api/categories`, {
                 headers: { Authorization: `Bearer ${token}` },
             })
                 .then((response) => setCategories(response.data))
@@ -52,7 +53,7 @@ export default function AddTransactionDialog({ open, accountId , onClose, onAdd 
             const rawAmount = Math.abs(Number(newTransaction.amount));
             const adjustedAmount = newTransaction.type === "EXPENSE" ? -rawAmount : rawAmount;
 
-            const response = await axios.post(`/api/transactions/account/${accountId}`, {
+            const response = await axios.post(`${API_URL}/api/transactions/account/${accountId}`, {
                 amount: adjustedAmount,
                 type: newTransaction.type,
                 categoryId: newTransaction.category,

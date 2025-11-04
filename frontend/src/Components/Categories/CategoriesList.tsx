@@ -21,7 +21,6 @@ type CategoriesListProps = {
 
 export default function CategoriesList({categories, onEdit}: CategoriesListProps) {
 
-
     return (
         <div>
             <Stack spacing={3} mt={2}>

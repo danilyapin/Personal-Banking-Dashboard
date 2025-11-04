@@ -14,6 +14,7 @@ import {
 } from "@mui/material";
 import type { AccountType }  from "../../types/AccountType.tsx";
 import type {TransactionType} from "../../types/TransactionType.tsx";
+import { API_URL } from "../../config";
 
 type Account = {
     accountId: string;
@@ -46,8 +47,8 @@ export default function AccountsPage() {
         const token = localStorage.getItem("token");
         setLoading(true);
 
-        const fetchAccounts = axios.get("/api/accounts", { headers: { Authorization: `Bearer ${token}` } });
-        const fetchTransactions = axios.get("/api/transactions", { headers: { Authorization: `Bearer ${token}` } });
+        const fetchAccounts = axios.get(`${API_URL}/api/accounts`, { headers: { Authorization: `Bearer ${token}` } });
+        const fetchTransactions = axios.get(`${API_URL}/api/transactions`, { headers: { Authorization: `Bearer ${token}` } });
 
         Promise.all([fetchAccounts, fetchTransactions])
             .then(([accRes, transRes]) => {

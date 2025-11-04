@@ -12,6 +12,7 @@ import axios from "axios";
 import AddCategoriesDialog from "../../Components/Categories/AddCategoriesDialog.tsx";
 import EditCategoriesDialog from "../../Components/Categories/EditCategoriesDialog.tsx";
 import CategoriesList from "../../Components/Categories/CategoriesList.tsx";
+import { API_URL } from "../../config.ts";
 
 type Category = {
     categoryId: string;
@@ -33,7 +34,7 @@ export default function CategoriesPage(){
         const token = localStorage.getItem("token");
         setLoading(true)
 
-        axios.get("/api/categories", {
+        axios.get(`${API_URL}/api/categories`, {
             headers: {
                 Authorization: `Bearer ${token}`
             },

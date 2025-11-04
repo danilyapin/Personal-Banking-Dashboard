@@ -8,6 +8,7 @@ import {
     Typography
 } from "@mui/material";
 import type {TransactionType} from "../../types/TransactionType.tsx";
+import { API_URL} from "../../config.ts";
 
 
 type DeleteTransactionDialogProps = {
@@ -22,7 +23,7 @@ export default function DeleteTransactionDialog({onClose, transaction, onDelete,
     const handleDelete = async () => {
         const token = localStorage.getItem('token');
         try {
-            await axios.delete(`/api/transactions/account/${transaction.accountId}/${transaction.transactionId}`, {
+            await axios.delete(`${API_URL}/api/transactions/account/${transaction.accountId}/${transaction.transactionId}`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 }

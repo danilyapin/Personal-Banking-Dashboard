@@ -3,6 +3,7 @@ import {useEffect, useState} from "react";
 import axios from "axios";
 import TransactionList from "../../Components/Transactions/TransactionList.tsx";
 import type {TransactionType} from "../../types/TransactionType.tsx";
+import { API_URL } from "../../config.ts";
 
 type Transaction = {
     transactionId: string;
@@ -32,8 +33,8 @@ export default function TransactionPage(){
         const token = localStorage.getItem("token");
         setLoading(true);
 
-        const fetchAccounts = axios.get("/api/accounts", { headers: { Authorization: `Bearer ${token}` } });
-        const fetchTransactions = axios.get("/api/transactions", { headers: { Authorization: `Bearer ${token}` } });
+        const fetchAccounts = axios.get(`${API_URL}/api/accounts`, { headers: { Authorization: `Bearer ${token}` } });
+        const fetchTransactions = axios.get(`${API_URL}/api/transactions`, { headers: { Authorization: `Bearer ${token}` } });
 
         Promise.all([fetchAccounts, fetchTransactions])
             .then(([accRes, transRes]) => {
@@ -47,7 +48,7 @@ export default function TransactionPage(){
                 showSnackbar("Error loading data", "success");
             })
 
-        axios.get(`/api/transactions`, {
+        axios.get(`${API_URL}/api/transactions`, {
             headers: {
                 Authorization: `Bearer ${token}`,
             }

@@ -10,8 +10,7 @@ import {
 } from "@mui/material";
 import {useEffect, useState} from "react";
 import axios from "axios";
-import * as React from "react";
-
+import { API_URL } from "../../config.ts";
 
 type EditCategoryProps = {
     open: boolean;
@@ -44,7 +43,7 @@ export default function EditCategoriesDialog({open, onClose, onCloseConfirmDelet
         const token = localStorage.getItem("token");
 
         try {
-            await axios.delete(`/api/categories/${category.categoryId}`, {
+            await axios.delete(`${API_URL}/api/categories/${category.categoryId}`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 }
@@ -65,7 +64,7 @@ export default function EditCategoriesDialog({open, onClose, onCloseConfirmDelet
         const token = localStorage.getItem("token");
 
         try {
-            const response = await axios.put(`/api/categories/${category.categoryId}`, {
+            const response = await axios.put(`${API_URL}/api/categories/${category.categoryId}`, {
                 name: editedCategory.name,
             }, {
                 headers: {

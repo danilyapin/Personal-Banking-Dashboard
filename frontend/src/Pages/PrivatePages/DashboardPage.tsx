@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import {Container, Typography, Stack, Box, Button, Card, CardContent} from "@mui/material";
+import {Container, Typography, Stack, Box, Button, Card, CardContent, CircularProgress} from "@mui/material";
 import axios from "axios";
 import {useNavigate} from "react-router-dom";
 
@@ -8,13 +8,15 @@ import ExpensesPieChart from "../../Components/Dashboard/ExpensesPirChart.tsx";
 import IncomeExpenseLineChart from "../../Components/Dashboard/IncomeExpenseLineCharts.tsx";
 import RecentTransactionsTable from "../../Components/Dashboard/RecentTransactionsTable.tsx"
 import { useDashboardData } from "../../Components/Dashboard/useDashboardData.tsx"
+import type {TransactionType} from "../../types/TransactionType.tsx";
+import { API_URL } from "../../config.ts";
 
 type Transaction = {
     transactionId: string;
     accountId: string;
     categoryId: string;
     amount: number;
-    type: "INCOME" | "EXPENSE";
+    type: TransactionType;
     date: string;
     description: string;
 };
@@ -48,10 +50,10 @@ export default function DashboardPage() {
         const token = localStorage.getItem("token");
         setLoading(true);
 
-        const fetchCategories = axios.get("/api/categories", { headers: { Authorization: `Bearer ${token}` } });
-        const fetchTransactions = axios.get("/api/transactions", { headers: { Authorization: `Bearer ${token}` } });
-        const fetchUser = axios.get("/api/login/me", { headers: { Authorization: `Bearer ${token}` } });
-        const fetchAccounts = axios.get("/api/accounts", { headers: { Authorization: `Bearer ${token}` } });
+        const fetchCategories = axios.get(`${API_URL}/api/categories`, { headers: { Authorization: `Bearer ${token}` } });
+        const fetchTransactions = axios.get(`${API_URL}/api/transactions`, { headers: { Authorization: `Bearer ${token}` } });
+        const fetchUser = axios.get(`${API_URL}/api/login/me`, { headers: { Authorization: `Bearer ${token}` } });
+        const fetchAccounts = axios.get(`${API_URL}/api/accounts`, { headers: { Authorization: `Bearer ${token}` } });
 
         Promise.all([fetchCategories, fetchTransactions, fetchUser, fetchAccounts])
             .then(([catRes, transRes, userRes, accRes]) => {
@@ -83,9 +85,18 @@ export default function DashboardPage() {
 
     if (loading) {
         return (
-            <Stack alignItems="center" justifyContent="center" sx={{ minHeight: "80vh" }}>
-                <Typography variant="h6">Loading dashboard...</Typography>
-            </Stack>
+            <Box
+                display="flex"
+                flexDirection="column"
+                justifyContent="center"
+                alignItems="center"
+                height="50vh"
+            >
+                <CircularProgress sx={{ mb: 2 }} />
+                <Typography color="text.secondary">
+                    Loading dashboard, please wait...
+                </Typography>
+            </Box>
         );
     }
 

@@ -7,6 +7,7 @@ import {
     TextField
 } from "@mui/material";
 import axios from "axios";
+import { API_URL } from "../../config.ts";
 
 type AddCategoryDialogProps = {
     open: boolean;
@@ -26,7 +27,7 @@ export default function AddCategoriesDialog({open, onClose, onAdd}: AddCategoryD
     const handleSubmit = async () => {
         const token = localStorage.getItem("token");
         try {
-            const response = await axios.post("/api/categories", {
+            const response = await axios.post(`${API_URL}/api/categories`, {
                 name: newCategory.name,
             }, {
                 headers: {

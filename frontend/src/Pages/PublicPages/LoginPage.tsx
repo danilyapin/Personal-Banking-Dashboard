@@ -2,6 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 import {Box, TextField, Button, Typography, Stack, Alert, Link, Snackbar} from "@mui/material";
 import { useNavigate, Link as RouterLink } from "react-router-dom";
+import { API_URL } from "../../config.ts";
 
 export default function LoginPage() {
     const [username, setUsername] = useState("");
@@ -17,7 +18,7 @@ export default function LoginPage() {
         setError("");
 
         try {
-            const response = await axios.post("/api/login", {
+            const response = await axios.post(`${API_URL}/api/login`, {
                 username,
                 password,
             });

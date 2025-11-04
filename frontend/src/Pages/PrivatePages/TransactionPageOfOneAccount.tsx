@@ -1,4 +1,4 @@
-import {Alert, Box, Button, Container, Snackbar, Typography} from "@mui/material";
+import {Alert, Box, Button, CircularProgress, Container, Snackbar, Typography} from "@mui/material";
 import {useEffect, useState} from "react";
 import axios from "axios";
 import {useParams} from "react-router-dom";
@@ -6,6 +6,7 @@ import AddTransactionDialog from "../../Components/Transactions/AddTransactionDi
 import TransactionListOfOneAccount from "../../Components/Transactions/TransactionListOfOneAccount.tsx";
 import type {TransactionType} from "../../types/TransactionType.tsx";
 import type {AccountType} from "../../types/AccountType.tsx";
+import { API_URL } from "../../config.ts";
 
 type Transaction = {
     transactionId: string;
@@ -40,8 +41,8 @@ export default function TransactionPageOfOneAccount(){
         const token = localStorage.getItem("token");
         setLoading(true);
 
-        const fetchAccounts = axios.get(`/api/accounts`, { headers: { Authorization: `Bearer ${token}` } });
-        const fetchTransactions = axios.get(`/api/transactions/account/${accountId}`, { headers: { Authorization: `Bearer ${token}` } });
+        const fetchAccounts = axios.get(`${API_URL}/api/accounts`, { headers: { Authorization: `Bearer ${token}` } });
+        const fetchTransactions = axios.get(`${API_URL}/api/transactions/account/${accountId}`, { headers: { Authorization: `Bearer ${token}` } });
 
         Promise.all([fetchAccounts, fetchTransactions])
             .then(([accRes, transRes]) => {
@@ -56,8 +57,8 @@ export default function TransactionPageOfOneAccount(){
             })
     }, []);
 
-    const handleAddTransaction = (transaction: Transaction) => {
-        setTransactions((prev) => [...prev, transaction]);
+    const handleAddTransaction = (transaction: Partial<Transaction>) => {
+        setTransactions((prev) => [...prev, transaction as Transaction]);
         showSnackbar("Transaction added successfully.", "success");
     };
 
@@ -73,6 +74,23 @@ export default function TransactionPageOfOneAccount(){
     }
 
     const currentAccount = accounts.find(account => account.accountId === accountId);
+
+    if (loading) {
+        return (
+            <Box
+                display="flex"
+                flexDirection="column"
+                justifyContent="center"
+                alignItems="center"
+                height="50vh"
+            >
+                <CircularProgress sx={{ mb: 2 }} />
+                <Typography color="text.secondary">
+                    Loading transactions, please wait...
+                </Typography>
+            </Box>
+        );
+    }
 
     return(
         <>
@@ -91,7 +109,7 @@ export default function TransactionPageOfOneAccount(){
                 </Box>
                 <AddTransactionDialog
                     open={open}
-                    accountId={accountId}
+                    accountId={accountId!}
                     onClose={() => setOpen(false)}
                     onAdd={handleAddTransaction} />
                 <Snackbar

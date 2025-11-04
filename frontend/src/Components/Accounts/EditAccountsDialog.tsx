@@ -17,6 +17,7 @@ import {
     from "@mui/material";
 import axios from "axios";
 import type {AccountType} from "../../types/AccountType.tsx";
+import { API_URL } from "../../config.ts";
 
 type EditAccountProps = {
     open: boolean;
@@ -52,7 +53,7 @@ export default function EditAccountDialog({ open, onClose, onCloseConfirmDelete,
     const handleDelete = async () => {
         const token = localStorage.getItem("token");
         try {
-            await axios.delete(`/api/accounts/${account.accountId}`, {
+            await axios.delete(`${API_URL}/api/accounts/${account.accountId}`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 }
@@ -73,7 +74,7 @@ export default function EditAccountDialog({ open, onClose, onCloseConfirmDelete,
     const handleSubmit = async () => {
         const token = localStorage.getItem("token");
         try {
-            const response = await axios.put(`/api/accounts/${account.accountId}`, {
+            const response = await axios.put(`${API_URL}/api/accounts/${account.accountId}`, {
                 name: editedAccount.name,
                 type: editedAccount.type,
                 balance: parseFloat(editedAccount.balance),
