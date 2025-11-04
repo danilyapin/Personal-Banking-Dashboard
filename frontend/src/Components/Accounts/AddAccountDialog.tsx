@@ -9,12 +9,12 @@ import {
     FormControl,
     InputLabel,
     Select,
-    MenuItem,
-    Snackbar,
-    Alert}
+    MenuItem
+}
     from "@mui/material";
 import axios from "axios";
 import type {AccountType} from "../../types/AccountType.tsx";
+import { API_URL } from "../../config.ts";
 
 type AddAccountDialogProps = {
     open: boolean;
@@ -28,8 +28,6 @@ export default function AddAccountDialog({ open, onClose, onAdd }: AddAccountDia
         type: "",
         balance: "" });
 
-    const [snackbarOpen, setSnackbarOpen] = useState(false);
-
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         setNewAccount({ ...newAccount, [e.target.name]: e.target.value });
     }
@@ -37,7 +35,7 @@ export default function AddAccountDialog({ open, onClose, onAdd }: AddAccountDia
     const handleSubmit = async () => {
         const token = localStorage.getItem("token");
         try {
-            const response = await axios.post("/api/accounts", {
+            const response = await axios.post(`${API_URL}/api/accounts`, {
                 name: newAccount.name,
                 type: newAccount.type,
                 balance: parseFloat(newAccount.balance),
@@ -47,7 +45,6 @@ export default function AddAccountDialog({ open, onClose, onAdd }: AddAccountDia
 
             onAdd(response.data);
             setNewAccount({ name: "", type: "", balance: "" });
-            setSnackbarOpen(true);
             onClose();
         } catch (error) {
             console.log("Error adding account", error);
@@ -130,16 +127,6 @@ export default function AddAccountDialog({ open, onClose, onAdd }: AddAccountDia
                     Save
                 </Button>
             </DialogActions>
-            <Snackbar
-                open={snackbarOpen}
-                autoHideDuration={3000}
-                onClose={() => setSnackbarOpen(false)}
-                anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
-            >
-                <Alert onClose={() => setSnackbarOpen(false)} severity="success">
-                    Account added successfully!
-                </Alert>
-            </Snackbar>
         </Dialog>
     )
 }
