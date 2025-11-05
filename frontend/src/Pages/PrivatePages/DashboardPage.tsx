@@ -189,7 +189,7 @@ export default function DashboardPage() {
                     <IncomeExpenseLineChart monthlyData={monthlyData} />
                 </Box>
             </Stack>
-            <RecentTransactionsTable transactions={transactions} getAccountName={getAccountName} />
+            <RecentTransactionsTable transactions={transactions.slice(0, 5)} getAccountName={getAccountName} />
         </Container>
     );
 }

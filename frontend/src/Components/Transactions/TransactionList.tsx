@@ -135,8 +135,8 @@ export default function TransactionList({ transactions, accounts }: TransactionL
             <DataGrid
                 rows={rows}
                 columns={columns}
-                paginationModel={{ pageSize: 5, page: 0}}
-                pageSizeOptions={[5]}
+                pageSizeOptions={[rows.length]}
+                paginationModel={{ pageSize: rows.length, page: 0 }}
                 sx={{
                     "& .MuiDataGrid-cell": {
                         userSelect: "none",
